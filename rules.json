@@ -1,0 +1,118 @@
+[
+    {
+        "tagName": "script",
+        "rules": 
+        [
+            {
+                "filters": 
+                [
+                    {
+                        "attr" : "src",
+                        "value" : "platform.twitter.com/widgets.js",
+                        "eval": "contains"
+                    }
+                ],
+                "actions": 
+                [
+                    {
+                        "replaceAttr": 
+                        [
+                            { "type": "text/plain"}
+                        ]
+                    },
+                    {
+                        "addAttr":
+                        [
+                            { "data-trucookiecontrol": "social_content" }
+                        ]
+                    }
+                ]
+            },
+            {
+                "filters": 
+                [
+                    {
+                        "attr" : "src",
+                        "value" : "www.instagram.com/embed.js",
+                        "eval": "contains"
+                    }
+                ],
+                "actions": 
+                [
+                    {
+                        "replaceAttr": 
+                        [
+                            { "type": "text/plain"}
+                        ]
+                    },
+                    {
+                        "addAttr":
+                        [
+                            { "data-trucookiecontrol": "social_content" }
+                        ]
+                    }
+                ]
+            },
+            {
+                "filters": 
+                [
+                    {
+                        "attr": "src",
+                        "value": "www.google-analytics.com",
+                        "eval": "contains"
+                    }
+                ],
+                "actions": [
+                    {
+                        "addAttr":
+                        [
+                            { "data-trucookiecontrol": "statistics" }
+                        ]
+                    },
+                    {
+                        "renameAttr": 
+                        [
+                            {"src": "data-src"}
+                        ]
+                    }
+                ]
+            },
+            {
+                "filters": 
+                [
+                    {
+                        "attr": "src",
+                        "value": "https://platform.twitter.com/widgets.js",
+                        "eval": "contains"
+                    }
+                ],
+                "actions": [
+                    {
+                        "addAttr":
+                        [
+                            { "data-trucookiecontrol": "social_content" }
+                        ]
+                    }
+                ]
+            },
+            {
+                "filters": 
+                [
+                    {
+                        "attr": "src",
+                        "value": "assets.tumblr.com/post.js",
+                        "eval": "contains"
+                    }
+                ],
+                "actions": [
+                    {
+                        "addAttr":
+                        [
+                            { "data-trucookiecontrol": "social_content" }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

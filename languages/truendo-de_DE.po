@@ -1,0 +1,299 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: truendo\n"
+"POT-Creation-Date: 2019-03-29 10:38+0100\n"
+"PO-Revision-Date: 2019-03-29 14:13+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: truendo.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: admin/class-truendo-admin.php:133
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: admin/class-truendo-admin.php:134
+msgid "How To"
+msgstr "How To"
+
+#: admin/class-truendo-admin.php:141
+#: admin/partials/truendo-admin-display.php:29
+msgid "Privacy Panel Settings"
+msgstr "Datenschutz Panel Einstellungen"
+
+#: admin/class-truendo-admin.php:142
+msgid "Privacy Panel"
+msgstr "Datenschutz Panel"
+
+#: admin/partials/truendo-admin-display.php:19
+msgid "Setup"
+msgstr "Setup"
+
+#: admin/partials/truendo-admin-display.php:21
+msgid "Scripts"
+msgstr "Skripte"
+
+#: admin/partials/truendo-admin-display.php:51
+msgid "Please configure the options as required below:"
+msgstr "Bitte konfigurieren Sie die Optionen nach Bedarf:"
+
+#: admin/partials/truendo-admin-display.php:55
+msgid "Enable the Privacy Panel"
+msgstr "Aktivieren Sie das Datenschutz Panel"
+
+#: admin/partials/truendo-admin-display.php:64
+msgid "Truendo ID"
+msgstr "TRUENDO ID"
+
+#: admin/partials/truendo-admin-display.php:73
+msgid "Language"
+msgstr "Sprache"
+
+#: admin/partials/truendo-admin-display.php:78
+msgid "Auto"
+msgstr "Auto"
+
+#: admin/partials/truendo-admin-display.php:81
+msgid "From Polylang"
+msgstr "Von Polylang"
+
+#: admin/partials/truendo-admin-display.php:85
+msgid "From WPML"
+msgstr "Von WPML"
+
+#: admin/partials/truendo-admin-display.php:88
+msgid "English"
+msgstr "Englisch"
+
+#: admin/partials/truendo-admin-display.php:89
+msgid "German"
+msgstr "Deutsch"
+
+#: admin/partials/truendo-admin-display.php:96
+msgid "Privacy Panel position"
+msgstr "Datenschutz Panel Position"
+
+#: admin/partials/truendo-admin-display.php:99
+msgid "Left"
+msgstr "Links"
+
+#: admin/partials/truendo-admin-display.php:100
+msgid "Right"
+msgstr "Rechts"
+
+#: admin/partials/truendo-admin-display.php:107
+msgid "Privacy Panel Margin"
+msgstr "Floating Button Abstand"
+
+#: admin/partials/truendo-admin-display.php:115
+msgid "Height"
+msgstr "Höhe"
+
+#: admin/partials/truendo-admin-display.php:119
+msgid "Width"
+msgstr "Breite"
+
+#: admin/partials/truendo-admin-display.php:127
+msgid "Privacy Panel Visibility"
+msgstr "Sichtbarkeit des Datenschutz Panel"
+
+#: admin/partials/truendo-admin-display.php:130
+msgid "Hide floating button"
+msgstr "Floating Button Ausblenden"
+
+#: admin/partials/truendo-admin-display.php:132
+msgid "IMPORTANT:"
+msgstr "ACHTUNG:"
+
+#: admin/partials/truendo-admin-display.php:133
+msgid ""
+"If you hide the floating button you HAVE TO link the Privacy Panel to a "
+"button or text. If users cannot access the Privacy Panel,"
+msgstr ""
+"Wenn Sie das Floating Button ausblenden, dann MÜSSEN Sie das Datenschutz "
+"Panel über einen Button oder einen Text verlinken. Wenn Benutzer keinen "
+"Zugang zum Datenschutz Panel haben,"
+
+#: admin/partials/truendo-admin-display.php:133
+msgid "YOUR WEBSITE WILL NOT BE COMPLIANT."
+msgstr "WIRD IHRE WEBSEITE NICHT DSGVO-KONFORM SEIN."
+
+#: admin/partials/truendo-admin-display.php:134
+#: admin/partials/truendo-admin-display.php:153
+#: admin/partials/truendo-admin-display.php:163
+#: admin/partials/truendo-admin-display.php:173
+msgid "Learn More"
+msgstr "Erfahren Sie Mehr"
+
+#: admin/partials/truendo-admin-display.php:148
+msgid ""
+" Use this code to add a button that opens the Privacy Panel anywhere on your "
+"website:"
+msgstr ""
+" Verwenden Sie diesen Code zum Hinzufügen des Datenschutz Panels mittels "
+"eines Buttons auf Ihre Webseite :"
+
+#: admin/partials/truendo-admin-display.php:158
+msgid ""
+"Use this shortcode to add a button that opens the Privacy Panel anywhere on "
+"your website:"
+msgstr ""
+
+#: admin/partials/truendo-admin-display.php:168
+msgid "Use this code to open the Privacy Panel with hyperlinked text:"
+msgstr ""
+
+#: admin/partials/truendo-admin-display.php:180
+msgid "Statistics"
+msgstr "Statistik"
+
+#: admin/partials/truendo-admin-display.php:180
+msgid "One per entry - Google analytics, Hotjar, etc"
+msgstr ""
+"Nur ein Skript pro Eintrag - bspw Google Analytics oder Hotjar (nicht beide "
+"auf einmal)"
+
+#: admin/partials/truendo-admin-display.php:181
+msgid "Marketing"
+msgstr "Marketing"
+
+#: admin/partials/truendo-admin-display.php:181
+msgid "One per entry - Facebook Pixel, etc"
+msgstr ""
+"Nur Ein Skript pro Eintrag - Facebook Pixel (nicht mehr als eines auf einmal)"
+
+#: admin/partials/truendo-admin-display.php:200
+msgid "Remove All"
+msgstr "Alle entfernen"
+
+#: admin/partials/truendo-admin-display.php:222
+msgid "Click here"
+msgstr "Klicken Sie hier"
+
+#: admin/partials/truendo-admin-display.php:222
+msgid "Learn how to attach cookies."
+msgstr ""
+"Um zu erfahren wie Sie Cookies mit dem Datenschutz Panel verknüpfen können."
+
+#: admin/partials/truendo-admin-display.php:228
+msgid "Don't have a TRUENDO account yet?"
+msgstr "Sie haben noch kein TRUENDO Konto?"
+
+#: admin/partials/truendo-admin-display.php:229
+msgid ""
+"Scan your site below and sign up with us, the process is quick and easy!"
+msgstr ""
+"Scannen Sie Ihre Webseite jetzt und erstellen Sie ein TRUENDO Konto. Es geht "
+"schnell und einfach!"
+
+#: admin/partials/truendo-admin-display.php:236
+msgid "START SCAN"
+msgstr "SCAN STARTEN"
+
+#: includes/truendo_contactform.php:186
+msgid "Consented"
+msgstr "Eingewilligt"
+
+#: includes/truendo_contactform.php:188
+msgid "Not consented"
+msgstr "Nicht eingewilligt"
+
+#: includes/truendo_contactform.php:204
+#, php-format
+msgctxt "mail output for truendo checkboxes"
+msgid "%1$s: %2$s"
+msgstr "%1$s: %2$s"
+
+#: includes/truendo_contactform.php:220
+msgid "truendo"
+msgstr "TRUENDO"
+
+#: includes/truendo_contactform.php:228
+#, php-format
+msgid "Generate a form-tag for an truendo checkbox. For more details, see %s."
+msgstr ""
+"Erstellen Sie ein form-Tag für eine TRUENDO checkbox. Für mehr Details, "
+"siehe %s."
+
+#: includes/truendo_contactform.php:230
+msgid "https://contactform7.com/truendo-checkbox/"
+msgstr "https://contactform7.com/truendo-checkbox/"
+
+#: includes/truendo_contactform.php:230
+msgid "truendo Checkbox"
+msgstr "TRUENDO Checkbox"
+
+#: includes/truendo_contactform.php:240
+msgid "Name"
+msgstr "Name"
+
+#: includes/truendo_contactform.php:245
+msgid "Condition"
+msgstr "Bedingung"
+
+#: includes/truendo_contactform.php:250 includes/truendo_contactform.php:253
+msgid "Options"
+msgstr "Optionen"
+
+#: includes/truendo_contactform.php:254
+msgid "Make this checkbox optional"
+msgstr "Machen Sie die Checkbox optional"
+
+#: includes/truendo_contactform.php:260
+msgid "Id attribute"
+msgstr "ID Attribut"
+
+#: includes/truendo_contactform.php:265
+msgid "Class attribute"
+msgstr "Class Attribut"
+
+#: includes/truendo_contactform.php:278
+msgid "Insert Tag"
+msgstr "Tag hinzufügen"
+
+#. Plugin Name of the plugin/theme
+msgid "TRUENDO | Professional Privacy Management"
+msgstr "TRUENDO | DSGVO einfach gemacht"
+
+#. Plugin URI of the plugin/theme
+msgid "https://truendo.com/easy-gdpr-website-integration/"
+msgstr "https://truendo.com/docs/de/"
+
+#. Description of the plugin/theme
+msgid ""
+"For quick and easy GDPR & Cookie compliance add Truendo's Privacy Panel to "
+"your website"
+msgstr ""
+"Um Ihre Webseite schnell und einfach DSGVO- und Cookie-konform zu gestalten, "
+"fügen Sie das TRUENDO Datenschutz Panel Ihrer Webseite hinzu"
+
+#. Author of the plugin/theme
+msgid "Truendo"
+msgstr "TRUENDO"
+
+#. Author URI of the plugin/theme
+msgid "https://www.truendo.com"
+msgstr "https://www.truendo.com"
+
+#~ msgid "Business ID"
+#~ msgstr "Business ID"
+
+#~ msgid ""
+#~ "Quickly add Truendo's Privacy Panel to your site for quick and easy GDPR "
+#~ "compliance."
+#~ msgstr ""
+#~ "Schnell TRUENDO's Datenschutz Panel auf Ihrer Webseite hinzufügen um "
+#~ "schnell und einfach Ihre Webseite DSGVO-konform zu gestalten."

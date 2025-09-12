@@ -1,0 +1,316 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+
+ #toplevel_page_truendo_wordpress .wp-menu-image img {
+     max-width:18px;
+     padding:8px 0px 0px !important;
+ }
+ .truendo_show_when_active {
+     display:none;
+ }
+
+ .truendo_show_when_active.active {
+     width:100%;
+    display: block !important;
+ }
+
+ .truendo_show_when_active_extra {
+    display:none;
+}
+
+.truendo_show_when_active_extra.active {
+    width:100%;
+   display:block !important;
+}
+
+
+ .truendo_top_holder {
+
+    position:relative;
+ }
+ 
+
+ .truendo_top_sentence {
+    margin:0px !important;
+    padding-bottom:10px;
+ }
+
+ .truendo_logo {
+     max-width:300px;
+     width:100%;
+
+    width:100%;
+     height:auto;
+     position:absolute;
+     right:0px;
+     top:15px;
+ }
+
+.truendo_settings_holder {
+
+    width:100%;
+    
+
+}
+
+.truendo_settings_holder section {
+    background:#fff;
+    padding:2.5em 2em 0px;
+
+}
+ 
+ .truendo_setting_holder {
+    display:flex;
+    flex-wrap:wrap;
+ }
+
+ .truendo_setting_holder h5 {
+    margin:0px 0px .1em;
+ }
+
+ .truendo_setting_holder .truendo_setting_info {
+    display:block;
+  
+    width:30%;
+    font-weight:bold;
+ }
+
+
+ .truendo_setting_holder .truendo_setting_info p {
+     margin:0px 0px;
+ }
+
+ .truendo_setting_holder .truendo_setting {
+    display:block;
+    width:70%;
+    padding-bottom:2.5em;
+ }
+
+ .truendo_setting_holder .truendo_setting .truendo_notification {
+    
+     padding:0em 1em;
+     margin-top:1em;
+     border:1px solid red;
+     display:none;
+ }
+ .truendo_notification.active {
+  
+}
+
+
+
+ .truendo_setting_holder input[type='text'], .truendo_setting_holder select {
+     width:100%;
+     min-width:350px;
+ }
+
+ .truendo_setting_holder input[type=radio]{display:none;}
+
+ #tru_left + label.leftSideHolder{
+    display:inline-block;
+    cursor: pointer;
+    outline: 0;	
+    width: 100px;
+    height: 70px;
+	background-image: url('../assets/icons.png');
+    background-repeat: no-repeat;
+    background-position: 0 bottom;
+    text-indent: -99999px;
+}
+ 
+ #tru_left:checked + label{background-position: right bottom;}
+
+ #tru_right + label.rightSideHolder{
+    display:inline-block;
+    cursor: pointer;
+    outline: 0;	
+    width: 100px;
+    height: 70px;
+	background-image: url('../assets/icons.png');
+    background-repeat: no-repeat;
+    background-position: 0 top;
+    text-indent: -99999px;
+}
+ 
+ #tru_right:checked + label{background-position: right top;}
+
+ .truendo_half_section label {
+    width:80px;
+    display:inline-block;
+}
+.truendo_textarea {
+    width:350px;
+    height:65px;
+    margin-bottom:.1em;
+}
+.margin_input {
+width:50px;
+}
+
+.truendo_submit_holder p {
+margin-top:0px !important;
+padding-top:0px !important;
+}
+.truendo_submit_holder.active p {
+
+}
+
+.truendo_dash_scan_form {
+    width:50%;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size:1.2em;
+    margin-top:1em;
+}
+
+.truendo_dash_scan_form .tru_dash_scan_input_holder  {
+    width:70%;
+}
+.truendo_dash_scan_form .tru_dash_scan_input_holder input {
+    width:98%;
+    padding:.65em 1em;
+    border:1px solid #2c3c53;
+    height:40px;
+   
+}
+.truendo_dash_scan_form .tru_dash_scan_button_holder  {
+    width:30%;
+}
+.truendo_dash_scan_form .tru_dash_scan_button_holder .tru_dash_scan_button  {
+    width:100%;
+    padding:.5em 1em;
+    border:1px solid #2c3c53;
+    background-color:#2c3c53;
+    cursor:pointer;
+    height:40px;
+    color:#fff;
+}
+
+.truendo_tab_header {
+    border: 0px;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    padding: 1em 2em;
+    background: #6b7686;
+    margin-right: .1em;
+    color:#fff;
+
+    transform-origin:bottom center;
+    transform:scale(0.87);
+
+    transition:.2s all;
+    cursor: pointer;
+    opacity:.5;
+    outline:none !important;
+}
+
+.truendo_tab_header.active,.truendo_tab_header:hover {
+    background:#fff;
+    color:#2c3c53;
+}
+
+.truendo_tab_header:hover {
+    opacity:.5;
+}
+
+.truendo_tab_header.active {
+    opacity:1 !important;
+    transform:scale(1);
+}
+
+.truendo_top_tabs_holder {
+    margin-top:2em;
+}
+
+/* SUBMIT BUTTON */
+
+.truendo_settings .submit .button {
+    text-transform: uppercase;
+    background: #2c3c53;
+    color: #fff;
+    border: none;
+    border-radius: 0px;
+    line-height: 50px;
+    height: 50px;
+    text-align: center;
+    padding: 0em 2em;
+    display: inline-block;
+    letter-spacing: 0.05em;
+    
+}
+
+.truendo_settings p.submit {
+    text-align: right;
+    max-width: 100%;
+}
+
+.truendo_setting .form-group textarea {
+    width:100%;
+}
+
+
+.truendo_setting .form-group label {
+    display:block;
+}
+
+.truendo_setting .form-control {
+    height:150px;
+}
+.truendo_setting .btn {
+background:#2c3c53;
+color:#fff;
+text-transform: uppercase;
+padding:.5em 1em;
+position:relative;
+display:flex;
+align-items: center;
+justify-content: center;
+
+}
+
+.truendo_setting .btn:after {
+    content: "\f132";
+    position:absolute;
+    font-size:2em;
+  /*  left:0px; right:0px;
+//    top:0px; bottom:0px;
+    font-size:40px;
+  //  width:100%; height:100%;*/
+    font-family:'dashicons', sans-serif;
+}
+.truendo_todolist .btn:after {
+    content: "\f335" !important;
+}
+
+.truendo_todolist li, .truendo_setting .form-group {
+text-align: right;
+display:flex;
+
+}
+
+.form-group textarea{
+    width:80%;
+
+    text-align:left;
+}
+.form-group button {
+    width:20%;
+}
+
+@media (max-width: 980px) {
+    .truendo_logo {
+        position:relative;
+        left:0px; right:0px; top:0px;
+    }
+    .truendo_setting_holder .truendo_setting_info, .truendo_setting_holder .truendo_setting {
+        display:block;
+        width:100%;
+     }
+    
+
+ }
