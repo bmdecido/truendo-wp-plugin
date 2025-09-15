@@ -99,18 +99,20 @@ class Truendo_Public
 	 */
 	public function add_google_consent_mode_script()
 	{
-		// Check page builder compatibility (same as TRUENDO script)
-		if (!$this->truendo_check_page_builder()) {
+		// Use comprehensive validation helper
+		if (!$this->should_load_consent_mode_script()) {
 			return;
 		}
 
-		// Verify all dependencies are enabled
-		if (!$this->is_google_consent_mode_active()) {
+		// Get safe configuration with error handling
+		$config = $this->get_safe_consent_config();
+
+		if (!$config) {
+			// Configuration invalid, don't break page
 			return;
 		}
 
-		// Get configuration and output script
-		$config = $this->get_consent_mode_config();
+		// Output script
 		echo $this->build_consent_mode_script_html($config);
 	}
 
@@ -252,5 +254,103 @@ class Truendo_Public
 		$script .= '</script>';
 
 		return $script;
+	}
+
+	/**
+	 * Static utility method for external access to consent mode status
+	 * Can be used by themes or other plugins
+	 *
+	 * @since    1.0.0
+	 * @return   bool    Whether Google Consent Mode is active on frontend
+	 */
+	public static function is_consent_mode_enabled()
+	{
+		return get_option('truendo_enabled') &&
+			   get_option('truendo_google_consent_enabled') &&
+			   !empty(get_option('truendo_site_id'));
+	}
+
+	/**
+	 * Helper method for safe configuration retrieval with error handling
+	 * Prevents breaking page rendering if configuration is invalid
+	 *
+	 * @since    1.0.0
+	 * @return   array|false    Safe configuration or false on error
+	 */
+	public function get_safe_consent_config()
+	{
+		try {
+			if (!$this->is_google_consent_mode_active()) {
+				return false;
+			}
+
+			$config = $this->get_consent_mode_config();
+
+			// Validate config structure
+			if (!is_array($config) ||
+				!isset($config['default_states']) ||
+				!isset($config['wait_time']) ||
+				!is_array($config['default_states'])) {
+
+				// Log error if WordPress debug is enabled
+				if (defined('WP_DEBUG') && WP_DEBUG) {
+					error_log('TRUENDO: Invalid Google Consent Mode configuration structure');
+				}
+				return false;
+			}
+
+			return $config;
+
+		} catch (Exception $e) {
+			// Log error but don't break page
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				error_log('TRUENDO Google Consent Mode error: ' . $e->getMessage());
+			}
+			return false;
+		}
+	}
+
+	/**
+	 * Helper method to validate consent mode script should load
+	 * Includes additional checks for performance and compatibility
+	 *
+	 * @since    1.0.0
+	 * @return   bool    Whether script should load
+	 */
+	public function should_load_consent_mode_script()
+	{
+		// Basic activation check
+		if (!$this->is_google_consent_mode_active()) {
+			return false;
+		}
+
+		// Page builder compatibility check
+		if (!$this->truendo_check_page_builder()) {
+			return false;
+		}
+
+		// Additional checks for specific contexts where script shouldn't load
+
+		// Don't load in admin area
+		if (is_admin()) {
+			return false;
+		}
+
+		// Don't load for REST API requests
+		if (defined('REST_REQUEST') && REST_REQUEST) {
+			return false;
+		}
+
+		// Don't load for AJAX requests (unless frontend AJAX)
+		if (defined('DOING_AJAX') && DOING_AJAX && is_admin()) {
+			return false;
+		}
+
+		// Don't load for cron jobs
+		if (defined('DOING_CRON') && DOING_CRON) {
+			return false;
+		}
+
+		return true;
 	}
 }

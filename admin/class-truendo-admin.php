@@ -240,19 +240,36 @@ class Truendo_Admin
 	 */
 	public function add_google_consent_mode_script()
 	{
-		// Check page builder compatibility (same as TRUENDO script)
-		if (!$this->truendo_check_page_builder()) {
-			return;
-		}
+		try {
+			// Check page builder compatibility (same as TRUENDO script)
+			if (!$this->truendo_check_page_builder()) {
+				return;
+			}
 
-		// Verify all dependencies are enabled
-		if (!$this->is_google_consent_mode_active()) {
-			return;
-		}
+			// Verify all dependencies are enabled
+			if (!$this->is_google_consent_mode_active()) {
+				return;
+			}
 
-		// Get configuration and output script
-		$config = $this->get_consent_mode_config();
-		$this->output_consent_mode_script($config);
+			// Get configuration and output script with error handling
+			$config = $this->get_consent_mode_config();
+
+			if (!$config || !is_array($config)) {
+				// Log error but don't break page
+				if (defined('WP_DEBUG') && WP_DEBUG) {
+					error_log('TRUENDO: Invalid Google Consent Mode configuration in admin');
+				}
+				return;
+			}
+
+			$this->output_consent_mode_script($config);
+
+		} catch (Exception $e) {
+			// Don't break page rendering on error
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				error_log('TRUENDO Google Consent Mode admin injection error: ' . $e->getMessage());
+			}
+		}
 	}
 
 	/**
@@ -476,6 +493,103 @@ class Truendo_Admin
 		}
 
 		return $wait_time;
+	}
+
+	/**
+	 * Static utility method to get Google Consent Mode configuration
+	 * Can be used by other parts of the plugin
+	 *
+	 * @since    1.0.0
+	 * @return   array|false    Configuration array or false if not active
+	 */
+	public static function truendo_get_google_consent_config()
+	{
+		// Check if Google Consent Mode is active
+		if (!get_option('truendo_enabled') ||
+			!get_option('truendo_google_consent_enabled') ||
+			empty(get_option('truendo_site_id'))) {
+			return false;
+		}
+
+		$default_states = get_option('truendo_google_consent_default_states', array());
+
+		// Provide fallback if no states configured
+		if (empty($default_states)) {
+			$default_states = array(
+				'ad_storage' => 'denied',
+				'ad_user_data' => 'denied',
+				'ad_personalization' => 'denied',
+				'analytics_storage' => 'denied',
+				'preferences' => 'denied',
+				'social_content' => 'denied',
+				'social_sharing' => 'denied',
+				'personalization_storage' => 'denied',
+				'functionality_storage' => 'denied'
+			);
+		}
+
+		return array(
+			'enabled' => true,
+			'default_states' => $default_states,
+			'wait_time' => (int) get_option('truendo_google_consent_wait_time', 500),
+			'truendo_site_id' => get_option('truendo_site_id'),
+			'truendo_enabled' => get_option('truendo_enabled')
+		);
+	}
+
+	/**
+	 * Static utility method to check if Google Consent Mode should be active
+	 * Can be used by other parts of the plugin or themes
+	 *
+	 * @since    1.0.0
+	 * @return   bool    Whether Google Consent Mode is active
+	 */
+	public static function truendo_is_google_consent_mode_active()
+	{
+		return get_option('truendo_enabled') &&
+			   get_option('truendo_google_consent_enabled') &&
+			   !empty(get_option('truendo_site_id'));
+	}
+
+	/**
+	 * Static utility method to get sanitized default consent states
+	 * Returns properly validated consent states for external use
+	 *
+	 * @since    1.0.0
+	 * @return   array    Validated consent states array
+	 */
+	public static function truendo_get_sanitized_consent_states()
+	{
+		$config = self::truendo_get_google_consent_config();
+
+		if (!$config) {
+			return array();
+		}
+
+		$safe_states = array();
+		$valid_categories = array(
+			'ad_storage', 'ad_user_data', 'ad_personalization',
+			'analytics_storage', 'preferences', 'social_content',
+			'social_sharing', 'personalization_storage', 'functionality_storage'
+		);
+
+		foreach ($config['default_states'] as $key => $value) {
+			$clean_key = sanitize_key($key);
+			$clean_value = sanitize_text_field($value);
+
+			if (in_array($clean_key, $valid_categories) && in_array($clean_value, array('granted', 'denied'))) {
+				$safe_states[$clean_key] = $clean_value;
+			}
+		}
+
+		// Ensure all required categories are present
+		foreach ($valid_categories as $category) {
+			if (!isset($safe_states[$category])) {
+				$safe_states[$category] = 'denied'; // Safe default
+			}
+		}
+
+		return $safe_states;
 	}
 
 }
