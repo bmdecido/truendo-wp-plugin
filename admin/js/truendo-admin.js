@@ -52,6 +52,15 @@ jQuery.decodeEntities = decode_entities;
     }
   });
 
+  //show/hide Google Consent Mode fields when toggle is changed
+  $('.truendo_google_consent_enabled').change(function () {
+    if (this.checked) {
+      $('.truendo_google_consent_fields').addClass('active');
+    } else {
+      $('.truendo_google_consent_fields').removeClass('active');
+    }
+  });
+
   // Select on click
   $('.truendo_settings_holder textarea').on('click', function () {
     $(this).select();

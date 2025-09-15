@@ -56,6 +56,77 @@
                 <div class='truendo_show_when_active <?php echo get_option('truendo_enabled') == true ? 'active' : ''; ?>'>
                     <div class='truendo_setting_holder'>
                         <div class='truendo_setting_info'>
+                            <p><?php echo __( 'Enable Google Consent Mode v2', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'><?php echo __( 'Integrates with Google Analytics and Google Ads for improved measurement under GDPR compliance.', 'truendo'); ?></p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='checkbox' class='truendo_google_consent_enabled' name='truendo_google_consent_enabled' <?php echo get_option('truendo_google_consent_enabled') ? 'checked="checked"' : ''; ?> />
+                        </div>
+                    </div>
+                    <div class='truendo_google_consent_fields <?php echo get_option('truendo_google_consent_enabled') ? 'active' : ''; ?>'>
+                        <!-- Google Consent Mode Categories -->
+                        <div class='truendo_setting_holder'>
+                            <div class='truendo_setting_info'>
+                                <p><?php echo __( 'Default Consent States', 'truendo'); ?></p>
+                                <p class='truendo_setting_description'><?php echo __( 'Configure the default consent state for each Google category. Users can change these through the consent banner.', 'truendo'); ?></p>
+                            </div>
+                            <div class='truendo_setting'>
+                                <div class='truendo_consent_categories'>
+                                    <?php
+                                    $categories = array(
+                                        'ad_storage' => __('Advertising Storage', 'truendo'),
+                                        'ad_user_data' => __('Advertising User Data', 'truendo'),
+                                        'ad_personalization' => __('Ad Personalization', 'truendo'),
+                                        'analytics_storage' => __('Analytics Storage', 'truendo'),
+                                        'preferences' => __('Preferences', 'truendo'),
+                                        'social_content' => __('Social Content', 'truendo'),
+                                        'social_sharing' => __('Social Sharing', 'truendo'),
+                                        'personalization_storage' => __('Personalization Storage', 'truendo'),
+                                        'functionality_storage' => __('Functionality Storage', 'truendo')
+                                    );
+
+                                    $default_states = get_option('truendo_google_consent_default_states', array());
+
+                                    foreach ($categories as $category_key => $category_label) {
+                                        $current_state = isset($default_states[$category_key]) ? $default_states[$category_key] : 'denied';
+                                        ?>
+                                        <div class='truendo_consent_category'>
+                                            <div class='truendo_category_label'>
+                                                <label><?php echo esc_html($category_label); ?></label>
+                                            </div>
+                                            <div class='truendo_category_options'>
+                                                <label class='truendo_radio_label'>
+                                                    <input type='radio' name='truendo_google_consent_default_states[<?php echo esc_attr($category_key); ?>]' value='granted' <?php checked('granted', $current_state); ?> />
+                                                    <span><?php echo __('Granted', 'truendo'); ?></span>
+                                                </label>
+                                                <label class='truendo_radio_label'>
+                                                    <input type='radio' name='truendo_google_consent_default_states[<?php echo esc_attr($category_key); ?>]' value='denied' <?php checked('denied', $current_state); ?> />
+                                                    <span><?php echo __('Denied', 'truendo'); ?></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Wait Time Setting -->
+                        <div class='truendo_setting_holder'>
+                            <div class='truendo_setting_info'>
+                                <p><?php echo __( 'Wait for Consent (milliseconds)', 'truendo'); ?></p>
+                                <p class='truendo_setting_description'><?php echo __( 'How long to wait for user consent before applying default states. Range: 500-5000ms.', 'truendo'); ?></p>
+                            </div>
+                            <div class='truendo_setting'>
+                                <input type='number' name='truendo_google_consent_wait_time' value='<?php echo esc_attr(get_option('truendo_google_consent_wait_time', 500)); ?>' min='500' max='5000' step='1' />
+                                <span class='truendo_unit_label'><?php echo __('ms', 'truendo'); ?></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
                             <p><?php echo __( 'Site-ID', 'truendo'); ?></p>
                         </div>
                         <div class='truendo_setting'>

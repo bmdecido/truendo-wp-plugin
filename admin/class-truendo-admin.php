@@ -86,6 +86,28 @@ class Truendo_Admin
 
 		register_setting('truendo_settings', 'tru_stat_truendo_header_scripts_json', array('type' => 'string', 'default' => ''));
 		register_setting('truendo_settings', 'tru_mark_truendo_header_scripts_json', array('type' => 'string', 'default' => ''));
+
+		// Google Consent Mode v2 settings
+		register_setting('truendo_settings', 'truendo_google_consent_enabled', array(
+			'type' => 'boolean',
+			'default' => false,
+			'sanitize_callback' => 'rest_sanitize_boolean',
+			'description' => 'Enable Google Consent Mode v2 integration'
+		));
+
+		register_setting('truendo_settings', 'truendo_google_consent_default_states', array(
+			'type' => 'array',
+			'default' => array(),
+			'sanitize_callback' => array($this, 'truendo_sanitize_consent_states'),
+			'description' => 'Default consent states for Google categories'
+		));
+
+		register_setting('truendo_settings', 'truendo_google_consent_wait_time', array(
+			'type' => 'integer',
+			'default' => 500,
+			'sanitize_callback' => array($this, 'truendo_sanitize_wait_time'),
+			'description' => 'Milliseconds to wait for user consent before applying defaults'
+		));
 	}
 
 	/**
@@ -194,7 +216,9 @@ class Truendo_Admin
 	{
 		if ($this->truendo_check_page_builder()) {
 			if (get_option('truendo_enabled')) {
-				if (get_option('truendo_site_id') != '') { ?> <script async>
+				if (get_option('truendo_site_id') != '') {
+					?>
+					<script async>
 						var s = document.createElement("script");
 						s.async = !0;
 						s.id = "truendoAutoBlock";
@@ -202,8 +226,65 @@ class Truendo_Admin
 						s.src = "https://cdn.priv.center/pc/truendo_cmp.pid.js";
 						s.dataset.siteid = "<?php echo get_option('truendo_site_id') ?>";
 						document.querySelector("head").prepend(s);
-					</script> <?php }
-						}
-					}
+					</script>
+					<?php
 				}
 			}
+		}
+	}
+
+	/**
+	 * Sanitize consent states array for Google Consent Mode v2
+	 *
+	 * @since    1.0.0
+	 * @param    array    $input    Raw consent states input
+	 * @return   array              Sanitized consent states
+	 */
+	public function truendo_sanitize_consent_states($input)
+	{
+		$valid_categories = array(
+			'ad_storage', 'ad_user_data', 'ad_personalization',
+			'analytics_storage', 'preferences', 'social_content',
+			'social_sharing', 'personalization_storage', 'functionality_storage'
+		);
+
+		$valid_states = array('granted', 'denied');
+		$sanitized = array();
+
+		if (is_array($input)) {
+			foreach ($input as $category => $state) {
+				$clean_category = sanitize_text_field($category);
+				$clean_state = sanitize_text_field($state);
+
+				if (in_array($clean_category, $valid_categories) &&
+					in_array($clean_state, $valid_states)) {
+					$sanitized[$clean_category] = $clean_state;
+				}
+			}
+		}
+
+		return $sanitized;
+	}
+
+	/**
+	 * Sanitize wait time value for Google Consent Mode v2
+	 *
+	 * @since    1.0.0
+	 * @param    int      $input    Raw wait time input
+	 * @return   int                Sanitized wait time (500-5000ms)
+	 */
+	public function truendo_sanitize_wait_time($input)
+	{
+		$wait_time = absint($input);
+
+		// Enforce bounds from functional requirements
+		if ($wait_time < 500) {
+			$wait_time = 500;
+		} elseif ($wait_time > 5000) {
+			$wait_time = 5000;
+		}
+
+		return $wait_time;
+	}
+
+}
