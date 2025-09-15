@@ -234,6 +234,197 @@ class Truendo_Admin
 	}
 
 	/**
+	 * Add Google Consent Mode v2 script injection
+	 *
+	 * @since    1.0.0
+	 */
+	public function add_google_consent_mode_script()
+	{
+		// Check page builder compatibility (same as TRUENDO script)
+		if (!$this->truendo_check_page_builder()) {
+			return;
+		}
+
+		// Verify all dependencies are enabled
+		if (!$this->is_google_consent_mode_active()) {
+			return;
+		}
+
+		// Get configuration and output script
+		$config = $this->get_consent_mode_config();
+		$this->output_consent_mode_script($config);
+	}
+
+	/**
+	 * Check if Google Consent Mode is active and properly configured
+	 *
+	 * @since    1.0.0
+	 * @return   bool    Whether Google Consent Mode should be active
+	 */
+	private function is_google_consent_mode_active()
+	{
+		return get_option('truendo_enabled') &&
+			   get_option('truendo_google_consent_enabled') &&
+			   !empty(get_option('truendo_site_id'));
+	}
+
+	/**
+	 * Get Google Consent Mode configuration with fallbacks
+	 *
+	 * @since    1.0.0
+	 * @return   array    Configuration array with default_states and wait_time
+	 */
+	private function get_consent_mode_config()
+	{
+		$default_states = get_option('truendo_google_consent_default_states', array());
+
+		// Provide fallback if no states configured
+		if (empty($default_states)) {
+			$default_states = array(
+				'ad_storage' => 'denied',
+				'ad_user_data' => 'denied',
+				'ad_personalization' => 'denied',
+				'analytics_storage' => 'denied',
+				'preferences' => 'denied',
+				'social_content' => 'denied',
+				'social_sharing' => 'denied',
+				'personalization_storage' => 'denied',
+				'functionality_storage' => 'denied'
+			);
+		}
+
+		return array(
+			'default_states' => $default_states,
+			'wait_time' => (int) get_option('truendo_google_consent_wait_time', 500)
+		);
+	}
+
+	/**
+	 * Output the Google Consent Mode script with configuration
+	 *
+	 * @since    1.0.0
+	 * @param    array    $config    Configuration array from get_consent_mode_config()
+	 */
+	private function output_consent_mode_script($config)
+	{
+		// Validate and sanitize the configuration
+		$safe_states = array();
+		$valid_categories = array(
+			'ad_storage', 'ad_user_data', 'ad_personalization',
+			'analytics_storage', 'preferences', 'social_content',
+			'social_sharing', 'personalization_storage', 'functionality_storage'
+		);
+
+		foreach ($config['default_states'] as $key => $value) {
+			$clean_key = sanitize_key($key);
+			$clean_value = sanitize_text_field($value);
+
+			if (in_array($clean_key, $valid_categories) && in_array($clean_value, array('granted', 'denied'))) {
+				$safe_states[$clean_key] = $clean_value;
+			}
+		}
+
+		$safe_wait_time = absint($config['wait_time']);
+
+		// Convert 'granted'/'denied' strings to boolean equivalents for the script template
+		$consent_mode_bools = array();
+		foreach ($safe_states as $category => $state) {
+			$consent_mode_bools[$category] = ($state === 'granted');
+		}
+		?>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+
+		// Set default consent states using user configuration
+		gtag("consent", "default", {
+			ad_storage: "<?php echo $consent_mode_bools['ad_storage'] ? 'granted' : 'denied'; ?>",
+			ad_user_data: "<?php echo $consent_mode_bools['ad_user_data'] ? 'granted' : 'denied'; ?>",
+			ad_personalization: "<?php echo $consent_mode_bools['ad_personalization'] ? 'granted' : 'denied'; ?>",
+			analytics_storage: "<?php echo $consent_mode_bools['analytics_storage'] ? 'granted' : 'denied'; ?>",
+			preferences: "<?php echo $consent_mode_bools['preferences'] ? 'granted' : 'denied'; ?>",
+			social_content: "<?php echo $consent_mode_bools['social_content'] ? 'granted' : 'denied'; ?>",
+			social_sharing: "<?php echo $consent_mode_bools['social_sharing'] ? 'granted' : 'denied'; ?>",
+			personalization_storage: "<?php echo $consent_mode_bools['personalization_storage'] ? 'granted' : 'denied'; ?>",
+			functionality_storage: "<?php echo $consent_mode_bools['functionality_storage'] ? 'granted' : 'denied'; ?>",
+			wait_for_update: <?php echo $safe_wait_time; ?> // milliseconds to wait for update
+		});
+
+		// Enable ads data redaction by default [optional]
+		gtag("set", "ads_data_redaction", true);
+
+		// Set the developer id
+		gtag("set", "developer_id.dMjBiZm", true);
+
+		function TruendoCookieControlCallback(cookieObj) {
+			if (cookieObj.preferences) {
+				gtag("consent", "update", {
+					preferences: "granted",
+				});
+			} else {
+				gtag("consent", "update", {
+					preferences: "denied",
+				});
+			}
+			if (cookieObj.marketing) {
+				gtag("consent", "update", {
+					ad_storage: "granted",
+					ad_personalization: "granted",
+					ad_user_data: "granted",
+				});
+			} else {
+				gtag("consent", "update", {
+					ad_storage: "denied",
+					ad_personalization: "denied",
+					ad_user_data: "denied",
+				});
+			}
+			if (cookieObj.add_features) {
+				gtag("consent", "update", {
+					functionality_storage: "granted",
+					personalization_storage: "granted",
+				});
+			} else {
+				gtag("consent", "update", {
+					functionality_storage: "denied",
+					personalization_storage: "denied",
+				});
+			}
+			if (cookieObj.statistics) {
+				gtag("consent", "update", {
+					analytics_storage: "granted",
+				});
+			} else {
+				gtag("consent", "update", {
+					analytics_storage: "denied",
+				});
+			}
+			if (cookieObj.social_content) {
+				gtag("consent", "update", {
+					social_content: "granted",
+				});
+			} else {
+				gtag("consent", "update", {
+					social_content: "denied",
+				});
+			}
+			if (cookieObj.social_sharing) {
+				gtag("consent", "update", {
+					social_sharing: "granted",
+				});
+			} else {
+				gtag("consent", "update", {
+					social_sharing: "denied",
+				});
+			}
+		}
+		</script>
+		<?php
+	}
+
+	/**
 	 * Sanitize consent states array for Google Consent Mode v2
 	 *
 	 * @since    1.0.0
