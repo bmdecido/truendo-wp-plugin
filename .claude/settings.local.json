@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell:*)",
+      "WebSearch",
+      "Bash(..specifyscriptspowershellsetup-plan.ps1 -Json)",
+      "Bash(dir \"C:\\tru\\truendo-wp-plugin\\specs\\002-consent-mode-integration\")",
+      "Bash(dir \"C:\\tru\\truendo-wp-plugin\\specs\\002-consent-mode-integration\\contracts\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
