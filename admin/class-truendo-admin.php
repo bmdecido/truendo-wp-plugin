@@ -212,26 +212,6 @@ class Truendo_Admin
 		}
 		return $isOkay;
 	}
-	public function add_truendo_script()
-	{
-		if ($this->truendo_check_page_builder()) {
-			if (get_option('truendo_enabled')) {
-				if (get_option('truendo_site_id') != '') {
-					?>
-					<script async>
-						var s = document.createElement("script");
-						s.async = !0;
-						s.id = "truendoAutoBlock";
-						s.type = "text/javascript";
-						s.src = "https://cdn.priv.center/pc/truendo_cmp.pid.js";
-						s.dataset.siteid = "<?php echo get_option('truendo_site_id') ?>";
-						document.querySelector("head").prepend(s);
-					</script>
-					<?php
-				}
-			}
-		}
-	}
 
 	/**
 	 * Add Google Consent Mode v2 script injection

@@ -158,8 +158,6 @@ class Truendo {
 		// Google Consent Mode v2 script injection (priority 5 - loads before TRUENDO CMP)
 		$this->loader->add_action( 'wp_head', $plugin_admin, 'add_google_consent_mode_script', 5 );
 
-		// TRUENDO CMP script injection in admin (priority 10 - loads after Google Consent Mode)
-		$this->loader->add_action( 'wp_head', $plugin_admin, 'add_truendo_script', 10 );
 	}
 
 

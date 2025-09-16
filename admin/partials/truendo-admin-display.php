@@ -141,9 +141,6 @@
                             </div>
                      
                     </div>
-
-
-                    </div>
                    
             </section>
             <!-- Scripts tab/settings -->
