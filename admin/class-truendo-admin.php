@@ -108,6 +108,21 @@ class Truendo_Admin
 			'sanitize_callback' => array($this, 'truendo_sanitize_wait_time'),
 			'description' => 'Milliseconds to wait for user consent before applying defaults'
 		));
+
+		// WordPress Consent API settings
+		register_setting('truendo_settings', 'truendo_wp_consent_enabled', array(
+			'type' => 'boolean',
+			'default' => false,
+			'sanitize_callback' => 'rest_sanitize_boolean',
+			'description' => 'Enable WordPress Consent API integration'
+		));
+
+		register_setting('truendo_settings', 'truendo_wp_consent_default_states', array(
+			'type' => 'array',
+			'default' => array(),
+			'sanitize_callback' => array($this, 'truendo_sanitize_wp_consent_states'),
+			'description' => 'Default consent states for WordPress Consent API categories'
+		));
 	}
 
 	/**
@@ -248,6 +263,45 @@ class Truendo_Admin
 			// Don't break page rendering on error
 			if (defined('WP_DEBUG') && WP_DEBUG) {
 				error_log('TRUENDO Google Consent Mode admin injection error: ' . $e->getMessage());
+			}
+		}
+	}
+
+	/**
+	 * Add WordPress Consent API script injection
+	 *
+	 * @since    1.0.0
+	 */
+	public function add_wp_consent_api_script()
+	{
+		try {
+			// Check page builder compatibility (same as TRUENDO script)
+			if (!$this->truendo_check_page_builder()) {
+				return;
+			}
+
+			// Verify all dependencies are enabled
+			if (!$this->is_wp_consent_mode_active()) {
+				return;
+			}
+
+			// Get configuration and output script with error handling
+			$config = $this->get_wp_consent_mode_config();
+
+			if (!$config || !is_array($config)) {
+				// Log error but don't break page
+				if (defined('WP_DEBUG') && WP_DEBUG) {
+					error_log('TRUENDO: Invalid WordPress Consent API configuration in admin');
+				}
+				return;
+			}
+
+			$this->output_wp_consent_script($config);
+
+		} catch (Exception $e) {
+			// Don't break page rendering on error
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				error_log('TRUENDO WordPress Consent API admin injection error: ' . $e->getMessage());
 			}
 		}
 	}
@@ -416,6 +470,108 @@ class Truendo_Admin
 					social_sharing: "denied",
 				});
 			}
+
+			// WordPress Consent API updates using TRUENDO mapping
+			<?php if (get_option('truendo_wp_consent_enabled')): ?>
+			if (typeof wp_set_consent === 'function') {
+				// preferences -> preferences
+				wp_set_consent('preferences', cookieObj.preferences ? 'allow' : 'deny');
+
+				// marketing -> marketing
+				wp_set_consent('marketing', cookieObj.marketing ? 'allow' : 'deny');
+
+				// statistics -> statistics, statistics-anonymous
+				wp_set_consent('statistics', cookieObj.statistics ? 'allow' : 'deny');
+				wp_set_consent('statistics-anonymous', cookieObj.statistics ? 'allow' : 'deny');
+
+				// necessary -> functional (always allowed)
+				wp_set_consent('functional', 'allow');
+			}
+			<?php endif; ?>
+		}
+		</script>
+		<?php
+	}
+
+	/**
+	 * Check if WordPress Consent API is active and properly configured
+	 *
+	 * @since    1.0.0
+	 * @return   bool    Whether WordPress Consent API should be active
+	 */
+	private function is_wp_consent_mode_active()
+	{
+		return get_option('truendo_enabled') &&
+			   get_option('truendo_wp_consent_enabled') &&
+			   !empty(get_option('truendo_site_id'));
+	}
+
+	/**
+	 * Get WordPress Consent API configuration with fallbacks
+	 *
+	 * @since    1.0.0
+	 * @return   array    Configuration array with default_states
+	 */
+	private function get_wp_consent_mode_config()
+	{
+		$default_states = get_option('truendo_wp_consent_default_states', array());
+
+		// Provide fallback if no states configured
+		if (empty($default_states)) {
+			$default_states = array(
+				'statistics' => 'deny',
+				'statistics-anonymous' => 'deny',
+				'marketing' => 'deny',
+				'functional' => 'deny',
+				'preferences' => 'deny'
+			);
+		}
+
+		return array(
+			'default_states' => $default_states
+		);
+	}
+
+	/**
+	 * Output the WordPress Consent API script with configuration
+	 *
+	 * @since    1.0.0
+	 * @param    array    $config    Configuration array from get_wp_consent_mode_config()
+	 */
+	private function output_wp_consent_script($config)
+	{
+		// Validate and sanitize the configuration
+		$safe_states = array();
+		$valid_categories = array(
+			'statistics', 'statistics-anonymous', 'marketing', 'functional', 'preferences'
+		);
+
+		foreach ($config['default_states'] as $key => $value) {
+			$clean_key = sanitize_key($key);
+			$clean_value = sanitize_text_field($value);
+
+			if (in_array($clean_key, $valid_categories) && in_array($clean_value, array('allow', 'deny'))) {
+				$safe_states[$clean_key] = $clean_value;
+			}
+		}
+
+		?>
+		<script>
+		// Initialize WordPress Consent API
+		window.wp_consent_type = 'optin';
+
+		// Dispatch event when consent type is defined
+		let wpConsentEvent = new CustomEvent('wp_consent_type_defined');
+		document.dispatchEvent(wpConsentEvent);
+
+		// Set default WordPress Consent API states based on admin configuration
+		if (typeof wp_set_consent === 'function') {
+			// Set defaults for each WP category based on admin settings
+			wp_set_consent('preferences', '<?php echo esc_js($safe_states['preferences'] ?? 'deny'); ?>');
+			wp_set_consent('marketing', '<?php echo esc_js($safe_states['marketing'] ?? 'deny'); ?>');
+			wp_set_consent('statistics', '<?php echo esc_js($safe_states['statistics'] ?? 'deny'); ?>');
+			wp_set_consent('statistics-anonymous', '<?php echo esc_js($safe_states['statistics-anonymous'] ?? 'deny'); ?>');
+			wp_set_consent('functional', 'allow'); // necessary cookies always allowed
 		}
 		</script>
 		<?php
@@ -473,6 +629,37 @@ class Truendo_Admin
 		}
 
 		return $wait_time;
+	}
+
+	/**
+	 * Sanitize consent states array for WordPress Consent API
+	 *
+	 * @since    1.0.0
+	 * @param    array    $input    Raw consent states input
+	 * @return   array              Sanitized consent states
+	 */
+	public function truendo_sanitize_wp_consent_states($input)
+	{
+		$valid_categories = array(
+			'statistics', 'statistics-anonymous', 'marketing', 'functional', 'preferences'
+		);
+
+		$valid_states = array('allow', 'deny');
+		$sanitized = array();
+
+		if (is_array($input)) {
+			foreach ($input as $category => $state) {
+				$clean_category = sanitize_text_field($category);
+				$clean_state = sanitize_text_field($state);
+
+				if (in_array($clean_category, $valid_categories) &&
+					in_array($clean_state, $valid_states)) {
+					$sanitized[$clean_category] = $clean_state;
+				}
+			}
+		}
+
+		return $sanitized;
 	}
 
 	/**
@@ -566,6 +753,96 @@ class Truendo_Admin
 		foreach ($valid_categories as $category) {
 			if (!isset($safe_states[$category])) {
 				$safe_states[$category] = 'denied'; // Safe default
+			}
+		}
+
+		return $safe_states;
+	}
+
+	/**
+	 * Static utility method to get WordPress Consent API configuration
+	 * Can be used by other parts of the plugin
+	 *
+	 * @since    1.0.0
+	 * @return   array|false    Configuration array or false if not active
+	 */
+	public static function truendo_get_wp_consent_config()
+	{
+		// Check if WP Consent API is active
+		if (!get_option('truendo_enabled') ||
+			!get_option('truendo_wp_consent_enabled') ||
+			empty(get_option('truendo_site_id'))) {
+			return false;
+		}
+
+		$default_states = get_option('truendo_wp_consent_default_states', array());
+
+		// Provide fallback if no states configured
+		if (empty($default_states)) {
+			$default_states = array(
+				'statistics' => 'deny',
+				'statistics-anonymous' => 'deny',
+				'marketing' => 'deny',
+				'functional' => 'deny',
+				'preferences' => 'deny'
+			);
+		}
+
+		return array(
+			'enabled' => true,
+			'default_states' => $default_states,
+			'truendo_site_id' => get_option('truendo_site_id'),
+			'truendo_enabled' => get_option('truendo_enabled')
+		);
+	}
+
+	/**
+	 * Static utility method to check if WordPress Consent API should be active
+	 * Can be used by other parts of the plugin or themes
+	 *
+	 * @since    1.0.0
+	 * @return   bool    Whether WordPress Consent API is active
+	 */
+	public static function truendo_is_wp_consent_mode_active()
+	{
+		return get_option('truendo_enabled') &&
+			   get_option('truendo_wp_consent_enabled') &&
+			   !empty(get_option('truendo_site_id'));
+	}
+
+	/**
+	 * Static utility method to get sanitized default WP consent states
+	 * Returns properly validated consent states for external use
+	 *
+	 * @since    1.0.0
+	 * @return   array    Validated consent states array
+	 */
+	public static function truendo_get_sanitized_wp_consent_states()
+	{
+		$config = self::truendo_get_wp_consent_config();
+
+		if (!$config) {
+			return array();
+		}
+
+		$safe_states = array();
+		$valid_categories = array(
+			'statistics', 'statistics-anonymous', 'marketing', 'functional', 'preferences'
+		);
+
+		foreach ($config['default_states'] as $key => $value) {
+			$clean_key = sanitize_key($key);
+			$clean_value = sanitize_text_field($value);
+
+			if (in_array($clean_key, $valid_categories) && in_array($clean_value, array('allow', 'deny'))) {
+				$safe_states[$clean_key] = $clean_value;
+			}
+		}
+
+		// Ensure all required categories are present
+		foreach ($valid_categories as $category) {
+			if (!isset($safe_states[$category])) {
+				$safe_states[$category] = 'deny'; // Safe default
 			}
 		}
 

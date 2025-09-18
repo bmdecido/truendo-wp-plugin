@@ -61,6 +61,15 @@ jQuery.decodeEntities = decode_entities;
     }
   });
 
+  //show/hide WordPress Consent API fields when toggle is changed
+  $('.truendo_wp_consent_enabled').change(function () {
+    if (this.checked) {
+      $('.truendo_wp_consent_fields').addClass('active');
+    } else {
+      $('.truendo_wp_consent_fields').removeClass('active');
+    }
+  });
+
   // Select on click
   $('.truendo_settings_holder textarea').on('click', function () {
     $(this).select();

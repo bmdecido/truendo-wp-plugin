@@ -72,6 +72,14 @@ The plugin includes Google Consent Mode v2 support that:
 - `personalization_storage` - Content personalization storage
 - `functionality_storage` - Essential functionality data
 
+#### Wordpress Consent API Categories
+- `statistics` - Cookies or any other form of local storage that are used exclusively for statistical purposes (Analytics Cookies).
+- `statistics-anonymous` - Cookies or any other form of local storage that are used exclusively for anonymous statistical purposes (Anonymous Analytics Cookies), that are placed on a first party domain, and that do not allow identification of particular individuals.
+- `marketing` - Cookies or any other form of local storage required to create user profiles to send advertising or to track the user on a website or across websites for similar marketing purposes.
+- `functional` - The cookie or any other form of local storage is used for the sole purpose of carrying out the transmission of a communication over an electronic communications network OR The technical storage or access is strictly necessary for the legitimate purpose of enabling the use of a specific service explicitly requested by the subscriber or user. If cookies are disabled, the requested functionality will not be available. This makes them essential functional cookies.
+- `preferences` - UsCookies or any other form of local storage that can not be seen as statistics, statistics-anonymous, marketing or functional, and where the technical storage or access is necessary for the legitimate purpose of storing preferences.
+
+
 #### Implementation Patterns
 - **Settings**: Follow existing WordPress Settings API pattern with custom sanitization
 - **Admin UI**: Use existing CSS/JS conditional display pattern (.truendo_show_when_active)

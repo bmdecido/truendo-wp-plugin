@@ -155,8 +155,11 @@ class Truendo {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'truendo_admin_enqueue_scripts' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'truendo_admin_add_settings' );
 
-		// Google Consent Mode v2 script injection (priority 5 - loads before TRUENDO CMP)
-		$this->loader->add_action( 'wp_head', $plugin_admin, 'add_google_consent_mode_script', 5 );
+		// Google Consent Mode v2 script injection (priority 10 - loads after TRUENDO CMP)
+		$this->loader->add_action( 'wp_head', $plugin_admin, 'add_google_consent_mode_script', 10 );
+
+		// WordPress Consent API script injection (priority 15 - loads after Google Consent Mode)
+		$this->loader->add_action( 'wp_head', $plugin_admin, 'add_wp_consent_api_script', 15 );
 
 	}
 
@@ -172,11 +175,14 @@ class Truendo {
 		$plugin_public = new Truendo_Public( $this->truendo_get_plugin_name(), $this->truendo_get_version());
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'truendo_public_enqueue_scripts' );
 
-		// Google Consent Mode v2 script injection (priority 5 - loads before TRUENDO CMP)
-		$this->loader->add_action( 'wp_head', $plugin_public, 'add_google_consent_mode_script', 5 );
+		// TRUENDO CMP script injection (priority 5 - loads first)
+	 	$this->loader->add_action( 'wp_head', $plugin_public, 'add_truendo_script', 5);
 
-		// TRUENDO CMP script injection (priority 10 - loads after Google Consent Mode)
-	 	$this->loader->add_action( 'wp_head', $plugin_public, 'add_truendo_script', 10);
+		// Google Consent Mode v2 script injection (priority 10 - loads after TRUENDO CMP)
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_google_consent_mode_script', 10 );
+
+		// WordPress Consent API script injection (priority 15 - loads after Google Consent Mode)
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_wp_consent_api_script', 15 );
 	}
 
 	/**

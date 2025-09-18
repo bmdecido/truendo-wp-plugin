@@ -250,6 +250,18 @@ class Truendo_Public
 		$script .= '} else {';
 		$script .= 'gtag("consent", "update", { social_sharing: "denied" });';
 		$script .= '}';
+
+		// WordPress Consent API updates using TRUENDO mapping
+		if (get_option('truendo_wp_consent_enabled')) {
+			$script .= 'if (typeof wp_set_consent === "function") {';
+			$script .= 'wp_set_consent("preferences", cookieObj.preferences ? "allow" : "deny");';
+			$script .= 'wp_set_consent("marketing", cookieObj.marketing ? "allow" : "deny");';
+			$script .= 'wp_set_consent("statistics", cookieObj.statistics ? "allow" : "deny");';
+			$script .= 'wp_set_consent("statistics-anonymous", cookieObj.statistics ? "allow" : "deny");';
+			$script .= 'wp_set_consent("functional", "allow");';
+			$script .= '}';
+		}
+
 		$script .= '}';
 		$script .= '</script>';
 
@@ -321,6 +333,198 @@ class Truendo_Public
 	{
 		// Basic activation check
 		if (!$this->is_google_consent_mode_active()) {
+			return false;
+		}
+
+		// Page builder compatibility check
+		if (!$this->truendo_check_page_builder()) {
+			return false;
+		}
+
+		// Additional checks for specific contexts where script shouldn't load
+
+		// Don't load in admin area
+		if (is_admin()) {
+			return false;
+		}
+
+		// Don't load for REST API requests
+		if (defined('REST_REQUEST') && REST_REQUEST) {
+			return false;
+		}
+
+		// Don't load for AJAX requests (unless frontend AJAX)
+		if (defined('DOING_AJAX') && DOING_AJAX && is_admin()) {
+			return false;
+		}
+
+		// Don't load for cron jobs
+		if (defined('DOING_CRON') && DOING_CRON) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Add WordPress Consent API script injection for public-facing pages
+	 *
+	 * @since    1.0.0
+	 */
+	public function add_wp_consent_api_script()
+	{
+		// Use comprehensive validation helper
+		if (!$this->should_load_wp_consent_script()) {
+			return;
+		}
+
+		// Get safe configuration with error handling
+		$config = $this->get_safe_wp_consent_config();
+
+		if (!$config) {
+			// Configuration invalid, don't break page
+			return;
+		}
+
+		// Output script
+		echo $this->build_wp_consent_script_html($config);
+	}
+
+	/**
+	 * Check if WordPress Consent API is active and properly configured
+	 *
+	 * @since    1.0.0
+	 * @return   bool    Whether WordPress Consent API should be active
+	 */
+	private function is_wp_consent_mode_active()
+	{
+		return get_option('truendo_enabled') &&
+			   get_option('truendo_wp_consent_enabled') &&
+			   !empty(get_option('truendo_site_id'));
+	}
+
+	/**
+	 * Get WordPress Consent API configuration with fallbacks
+	 *
+	 * @since    1.0.0
+	 * @return   array    Configuration array with default_states
+	 */
+	private function get_wp_consent_mode_config()
+	{
+		$default_states = get_option('truendo_wp_consent_default_states', array());
+
+		// Provide fallback if no states configured
+		if (empty($default_states)) {
+			$default_states = array(
+				'statistics' => 'deny',
+				'statistics-anonymous' => 'deny',
+				'marketing' => 'deny',
+				'functional' => 'allow', // necessary cookies always allowed
+				'preferences' => 'deny'
+			);
+		}
+
+		return array(
+			'default_states' => $default_states
+		);
+	}
+
+	/**
+	 * Build the WordPress Consent API script HTML with configuration
+	 *
+	 * @since    1.0.0
+	 * @param    array    $config    Configuration array from get_wp_consent_mode_config()
+	 * @return   string             HTML script tag with WordPress Consent API initialization
+	 */
+	private function build_wp_consent_script_html($config)
+	{
+		// Validate and sanitize the configuration
+		$safe_states = array();
+		$valid_categories = array(
+			'statistics', 'statistics-anonymous', 'marketing', 'functional', 'preferences'
+		);
+
+		foreach ($config['default_states'] as $key => $value) {
+			$clean_key = sanitize_key($key);
+			$clean_value = sanitize_text_field($value);
+
+			if (in_array($clean_key, $valid_categories) && in_array($clean_value, array('allow', 'deny'))) {
+				$safe_states[$clean_key] = $clean_value;
+			}
+		}
+
+		// Build complete WP Consent API script HTML
+		$script = '<script>';
+
+		// Initialize WordPress Consent API
+		$script .= 'window.wp_consent_type = "optin";';
+		$script .= 'let wpConsentEvent = new CustomEvent("wp_consent_type_defined");';
+		$script .= 'document.dispatchEvent(wpConsentEvent);';
+
+		// Set default WordPress Consent API states based on admin configuration
+		$script .= 'if (typeof wp_set_consent === "function") {';
+		$script .= 'wp_set_consent("preferences", "' . esc_js($safe_states['preferences'] ?? 'deny') . '");';
+		$script .= 'wp_set_consent("marketing", "' . esc_js($safe_states['marketing'] ?? 'deny') . '");';
+		$script .= 'wp_set_consent("statistics", "' . esc_js($safe_states['statistics'] ?? 'deny') . '");';
+		$script .= 'wp_set_consent("statistics-anonymous", "' . esc_js($safe_states['statistics-anonymous'] ?? 'deny') . '");';
+		$script .= 'wp_set_consent("functional", "allow");'; // necessary cookies always allowed
+		$script .= '}';
+
+		$script .= '</script>';
+
+		return $script;
+	}
+
+	/**
+	 * Helper method for safe WP Consent API configuration retrieval with error handling
+	 * Prevents breaking page rendering if configuration is invalid
+	 *
+	 * @since    1.0.0
+	 * @return   array|false    Safe configuration or false on error
+	 */
+	public function get_safe_wp_consent_config()
+	{
+		try {
+			if (!$this->is_wp_consent_mode_active()) {
+				return false;
+			}
+
+			$config = $this->get_wp_consent_mode_config();
+
+			// Validate config structure
+			if (!is_array($config) ||
+				!isset($config['default_states']) ||
+				!is_array($config['default_states'])) {
+
+				// Log error if WordPress debug is enabled
+				if (defined('WP_DEBUG') && WP_DEBUG) {
+					error_log('TRUENDO: Invalid WordPress Consent API configuration structure');
+				}
+				return false;
+			}
+
+			return $config;
+
+		} catch (Exception $e) {
+			// Log error but don't break page
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				error_log('TRUENDO WordPress Consent API error: ' . $e->getMessage());
+			}
+			return false;
+		}
+	}
+
+	/**
+	 * Helper method to validate WP consent script should load
+	 * Includes additional checks for performance and compatibility
+	 *
+	 * @since    1.0.0
+	 * @return   bool    Whether script should load
+	 */
+	public function should_load_wp_consent_script()
+	{
+		// Basic activation check
+		if (!$this->is_wp_consent_mode_active()) {
 			return false;
 		}
 

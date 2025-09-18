@@ -125,6 +125,63 @@
                         </div>
                     </div>
 
+                    <!-- WordPress Consent API Section -->
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __( 'WordPress Consent API', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'><?php echo __( 'Integrates with WordPress Consent API for standardized consent management across plugins.', 'truendo'); ?></p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='checkbox' class='truendo_wp_consent_enabled' name='truendo_wp_consent_enabled' <?php echo get_option('truendo_wp_consent_enabled') ? 'checked="checked"' : ''; ?> />
+                        </div>
+                    </div>
+                    <div class='truendo_wp_consent_fields <?php echo get_option('truendo_wp_consent_enabled') ? 'active' : ''; ?>'>
+                        <!-- WordPress Consent API Categories -->
+                        <div class='truendo_setting_holder'>
+                            <div class='truendo_setting_info'>
+                                <p><?php echo __( 'Default WP Consent States', 'truendo'); ?></p>
+                                <p class='truendo_setting_description'><?php echo __( 'Configure the default consent state for each WordPress Consent API category. Users can change these through the consent banner.', 'truendo'); ?></p>
+                            </div>
+                            <div class='truendo_setting'>
+                                <div class='truendo_consent_categories'>
+                                    <?php
+                                    $wp_categories = array(
+                                        'statistics' => __('Statistics', 'truendo'),
+                                        'statistics-anonymous' => __('Anonymous Statistics', 'truendo'),
+                                        'marketing' => __('Marketing', 'truendo'),
+                                        'functional' => __('Functional (Always Allowed)', 'truendo'),
+                                        'preferences' => __('Preferences', 'truendo')
+                                    );
+
+                                    $wp_default_states = get_option('truendo_wp_consent_default_states', array());
+
+                                    foreach ($wp_categories as $category_key => $category_label) {
+                                        $current_state = isset($wp_default_states[$category_key]) ? $wp_default_states[$category_key] : 'deny';
+                                        $is_functional = ($category_key === 'functional');
+                                        ?>
+                                        <div class='truendo_consent_category'>
+                                            <div class='truendo_category_label'>
+                                                <label><?php echo esc_html($category_label); ?></label>
+                                            </div>
+                                            <div class='truendo_category_options'>
+                                                <label class='truendo_radio_label'>
+                                                    <input type='radio' name='truendo_wp_consent_default_states[<?php echo esc_attr($category_key); ?>]' value='allow' <?php checked('allow', $current_state); ?> <?php echo $is_functional ? 'checked disabled' : ''; ?> />
+                                                    <span><?php echo __('Allow', 'truendo'); ?></span>
+                                                </label>
+                                                <label class='truendo_radio_label'>
+                                                    <input type='radio' name='truendo_wp_consent_default_states[<?php echo esc_attr($category_key); ?>]' value='deny' <?php checked('deny', $current_state); ?> <?php echo $is_functional ? 'disabled' : ''; ?> />
+                                                    <span><?php echo __('Deny', 'truendo'); ?></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class='truendo_setting_holder'>
                         <div class='truendo_setting_info'>
                             <p><?php echo __( 'Site-ID', 'truendo'); ?></p>
