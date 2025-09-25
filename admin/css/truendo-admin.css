@@ -35,6 +35,10 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.truendo_top_holder p {
+    color: black;
+}
+
 .truendo_logo {
   max-width: 280px;
   width: 100%;
