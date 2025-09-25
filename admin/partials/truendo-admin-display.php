@@ -106,15 +106,18 @@ $tabs = array(
 
                                     $default_states = get_option('truendo_google_consent_default_states', array());
 
+                                    $category_keys = array_keys($categories);
+                                    $last_key = end($category_keys);
+
                                     foreach ($categories as $category_key => $category_label) {
-                                        // Functionality Storage should always be granted and cannot be changed
-                                        $is_functionality = ($category_key === 'functionality_storage');
-                                        $current_state = isset($default_states[$category_key]) ? $default_states[$category_key] : ($is_functionality ? 'granted' : 'denied');
+                                        // Last category should always be granted and cannot be changed
+                                        $is_last_category = ($category_key === $last_key);
+                                        $current_state = isset($default_states[$category_key]) ? $default_states[$category_key] : ($is_last_category ? 'granted' : 'denied');
                                         ?>
                                         <div class='truendo_consent_category'>
                                             <div class='truendo_category_label'>
                                                 <label><?php echo esc_html($category_label); ?></label>
-                                                <?php if ($is_functionality): ?>
+                                                <?php if ($is_last_category): ?>
                                                     <span class='truendo_setting_description' style='font-size: 12px; color: #6c757d;'><?php echo __('(Always Allowed)', 'truendo'); ?></span>
                                                 <?php endif; ?>
                                             </div>
@@ -122,13 +125,13 @@ $tabs = array(
                                                 <label class='truendo_radio_label'>
                                                     <input type='radio'
                                                         name='truendo_google_consent_default_states[<?php echo esc_attr($category_key); ?>]'
-                                                        value='granted' <?php checked('granted', $current_state); ?> <?php echo $is_functionality ? 'checked disabled' : ''; ?> />
+                                                        value='granted' <?php echo $is_last_category ? 'checked disabled' : checked('granted', $current_state, false); ?> />
                                                     <span><?php echo __('Granted', 'truendo'); ?></span>
                                                 </label>
                                                 <label class='truendo_radio_label'>
                                                     <input type='radio'
                                                         name='truendo_google_consent_default_states[<?php echo esc_attr($category_key); ?>]'
-                                                        value='denied' <?php checked('denied', $current_state); ?> <?php echo $is_functionality ? 'disabled' : ''; ?> />
+                                                        value='denied' <?php echo $is_last_category ? 'disabled' : checked('denied', $current_state, false); ?> />
                                                     <span><?php echo __('Denied', 'truendo'); ?></span>
                                                 </label>
                                             </div>
@@ -187,15 +190,19 @@ $tabs = array(
                                         'statistics' => __('Statistics', 'truendo'),
                                         'statistics-anonymous' => __('Anonymous Statistics', 'truendo'),
                                         'marketing' => __('Marketing', 'truendo'),
+                                        'preferences' => __('Preferences', 'truendo'),
                                         'functional' => __('Functional (Always Allowed)', 'truendo'),
-                                        'preferences' => __('Preferences', 'truendo')
                                     );
 
                                     $wp_default_states = get_option('truendo_wp_consent_default_states', array());
 
+                                    $wp_category_keys = array_keys($wp_categories);
+                                    $wp_last_key = end($wp_category_keys);
+
                                     foreach ($wp_categories as $category_key => $category_label) {
-                                        $current_state = isset($wp_default_states[$category_key]) ? $wp_default_states[$category_key] : 'deny';
-                                        $is_functional = ($category_key === 'functional');
+                                        // Last category should always be allow and cannot be changed
+                                        $is_last_category = ($category_key === $wp_last_key);
+                                        $current_state = isset($wp_default_states[$category_key]) ? $wp_default_states[$category_key] : ($is_last_category ? 'allow' : 'deny');
                                         ?>
                                         <div class='truendo_consent_category'>
                                             <div class='truendo_category_label'>
@@ -205,13 +212,13 @@ $tabs = array(
                                                 <label class='truendo_radio_label'>
                                                     <input type='radio'
                                                         name='truendo_wp_consent_default_states[<?php echo esc_attr($category_key); ?>]'
-                                                        value='allow' <?php checked('allow', $current_state); ?>     <?php echo $is_functional ? 'checked disabled' : ''; ?> />
+                                                        value='allow' <?php echo $is_last_category ? 'checked disabled' : checked('allow', $current_state, false); ?> />
                                                     <span><?php echo __('Allow', 'truendo'); ?></span>
                                                 </label>
                                                 <label class='truendo_radio_label'>
                                                     <input type='radio'
                                                         name='truendo_wp_consent_default_states[<?php echo esc_attr($category_key); ?>]'
-                                                        value='deny' <?php checked('deny', $current_state); ?>     <?php echo $is_functional ? 'disabled' : ''; ?> />
+                                                        value='deny' <?php echo $is_last_category ? 'disabled' : checked('deny', $current_state, false); ?> />
                                                     <span><?php echo __('Deny', 'truendo'); ?></span>
                                                 </label>
                                             </div>
