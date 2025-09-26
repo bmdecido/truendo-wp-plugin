@@ -209,7 +209,7 @@ class Truendo_Public
 		$script .= 'social_content: "' . ($consent_mode_bools['social_content'] ? 'granted' : 'denied') . '",';
 		$script .= 'social_sharing: "' . ($consent_mode_bools['social_sharing'] ? 'granted' : 'denied') . '",';
 		$script .= 'personalization_storage: "' . ($consent_mode_bools['personalization_storage'] ? 'granted' : 'denied') . '",';
-		$script .= 'functionality_storage: "' . ($consent_mode_bools['functionality_storage'] ? 'granted' : 'denied') . '",';
+		$script .= 'functionality_storage: "granted",';
 		$script .= 'wait_for_update: ' . $safe_wait_time . '});';
 
 		// Enable ads data redaction by default [optional]
