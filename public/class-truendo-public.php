@@ -194,6 +194,23 @@ class Truendo_Public
 			$consent_mode_bools[$category] = ($state === 'granted');
 		}
 
+		// Prepare WordPress Consent API defaults (if enabled)
+		$wp_consent_enabled = get_option('truendo_wp_consent_enabled');
+		$wp_safe_states = array();
+		if ($wp_consent_enabled) {
+			$wp_config = $this->get_wp_consent_mode_config();
+			$wp_valid_categories = array('statistics', 'statistics-anonymous', 'marketing', 'functional', 'preferences');
+
+			foreach ($wp_config['default_states'] as $key => $value) {
+				// Don't use sanitize_key() as it converts hyphens to underscores
+				$clean_key = sanitize_text_field($key);
+				$clean_value = sanitize_text_field($value);
+				if (in_array($clean_key, $wp_valid_categories, true) && in_array($clean_value, array('allow', 'deny'), true)) {
+					$wp_safe_states[$clean_key] = $clean_value;
+				}
+			}
+		}
+
 		// Build complete consent mode script HTML
 		$script = '<script>';
 		$script .= 'window.dataLayer = window.dataLayer || [];';
@@ -263,6 +280,23 @@ class Truendo_Public
 		}
 
 		$script .= '}';
+
+		// WordPress Consent API - Set default states immediately (if enabled)
+		if ($wp_consent_enabled) {
+			$script .= 'console.log("TRUENDO WP Consent API: Setting defaults...");';
+			$script .= 'if (typeof wp_set_consent === "function") {';
+			$script .= 'console.log("TRUENDO: wp_set_consent function found from WordPress");';
+			$script .= 'wp_set_consent("preferences", "' . esc_js($wp_safe_states['preferences'] ?? 'deny') . '");';
+			$script .= 'wp_set_consent("marketing", "' . esc_js($wp_safe_states['marketing'] ?? 'deny') . '");';
+			$script .= 'wp_set_consent("statistics", "' . esc_js($wp_safe_states['statistics'] ?? 'deny') . '");';
+			$script .= 'wp_set_consent("statistics-anonymous", "' . esc_js($wp_safe_states['statistics-anonymous'] ?? 'deny') . '");';
+			$script .= 'wp_set_consent("functional", "allow");';
+			$script .= 'console.log("TRUENDO WP Consent API: Defaults set successfully");';
+			$script .= '} else {';
+			$script .= 'console.warn("TRUENDO: wp_set_consent function not found. Please install a WordPress Consent API plugin.");';
+			$script .= '}';
+		}
+
 		$script .= '</script>';
 
 		return $script;
@@ -445,10 +479,11 @@ class Truendo_Public
 		);
 
 		foreach ($config['default_states'] as $key => $value) {
-			$clean_key = sanitize_key($key);
+			// Don't use sanitize_key() as it converts hyphens to underscores
+			$clean_key = sanitize_text_field($key);
 			$clean_value = sanitize_text_field($value);
 
-			if (in_array($clean_key, $valid_categories) && in_array($clean_value, array('allow', 'deny'))) {
+			if (in_array($clean_key, $valid_categories, true) && in_array($clean_value, array('allow', 'deny'), true)) {
 				$safe_states[$clean_key] = $clean_value;
 			}
 		}

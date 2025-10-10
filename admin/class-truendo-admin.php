@@ -382,6 +382,23 @@ class Truendo_Admin
 		foreach ($safe_states as $category => $state) {
 			$consent_mode_bools[$category] = ($state === 'granted');
 		}
+
+		// Prepare WordPress Consent API defaults (if enabled)
+		$wp_consent_enabled = get_option('truendo_wp_consent_enabled');
+		$wp_safe_states = array();
+		if ($wp_consent_enabled) {
+			$wp_config = $this->get_wp_consent_mode_config();
+			$wp_valid_categories = array('statistics', 'statistics-anonymous', 'marketing', 'functional', 'preferences');
+
+			foreach ($wp_config['default_states'] as $key => $value) {
+				// Don't use sanitize_key() as it converts hyphens to underscores
+				$clean_key = sanitize_text_field($key);
+				$clean_value = sanitize_text_field($value);
+				if (in_array($clean_key, $wp_valid_categories, true) && in_array($clean_value, array('allow', 'deny'), true)) {
+					$wp_safe_states[$clean_key] = $clean_value;
+				}
+			}
+		}
 		?>
 		<script>
 		window.dataLayer = window.dataLayer || [];
@@ -489,6 +506,22 @@ class Truendo_Admin
 			}
 			<?php endif; ?>
 		}
+
+		<?php if ($wp_consent_enabled): ?>
+		// WordPress Consent API - Set default states immediately
+		console.log('TRUENDO WP Consent API: Setting defaults...');
+		if (typeof wp_set_consent === 'function') {
+			console.log('TRUENDO: wp_set_consent function found from WordPress');
+			wp_set_consent('preferences', '<?php echo esc_js($wp_safe_states['preferences'] ?? 'deny'); ?>');
+			wp_set_consent('marketing', '<?php echo esc_js($wp_safe_states['marketing'] ?? 'deny'); ?>');
+			wp_set_consent('statistics', '<?php echo esc_js($wp_safe_states['statistics'] ?? 'deny'); ?>');
+			wp_set_consent('statistics-anonymous', '<?php echo esc_js($wp_safe_states['statistics-anonymous'] ?? 'deny'); ?>');
+			wp_set_consent('functional', 'allow');
+			console.log('TRUENDO WP Consent API: Defaults set successfully');
+		} else {
+			console.warn('TRUENDO: wp_set_consent function not found. Please install a WordPress Consent API plugin.');
+		}
+		<?php endif; ?>
 		</script>
 		<?php
 	}
@@ -522,7 +555,7 @@ class Truendo_Admin
 				'statistics' => 'deny',
 				'statistics-anonymous' => 'deny',
 				'marketing' => 'deny',
-				'functional' => 'deny',
+				'functional' => 'allow', // necessary cookies always allowed
 				'preferences' => 'deny'
 			);
 		}
@@ -547,10 +580,11 @@ class Truendo_Admin
 		);
 
 		foreach ($config['default_states'] as $key => $value) {
-			$clean_key = sanitize_key($key);
+			// Don't use sanitize_key() as it converts hyphens to underscores
+			$clean_key = sanitize_text_field($key);
 			$clean_value = sanitize_text_field($value);
 
-			if (in_array($clean_key, $valid_categories) && in_array($clean_value, array('allow', 'deny'))) {
+			if (in_array($clean_key, $valid_categories, true) && in_array($clean_value, array('allow', 'deny'), true)) {
 				$safe_states[$clean_key] = $clean_value;
 			}
 		}
@@ -783,7 +817,7 @@ class Truendo_Admin
 				'statistics' => 'deny',
 				'statistics-anonymous' => 'deny',
 				'marketing' => 'deny',
-				'functional' => 'deny',
+				'functional' => 'allow', // necessary cookies always allowed
 				'preferences' => 'deny'
 			);
 		}
@@ -831,10 +865,11 @@ class Truendo_Admin
 		);
 
 		foreach ($config['default_states'] as $key => $value) {
-			$clean_key = sanitize_key($key);
+			// Don't use sanitize_key() as it converts hyphens to underscores
+			$clean_key = sanitize_text_field($key);
 			$clean_value = sanitize_text_field($value);
 
-			if (in_array($clean_key, $valid_categories) && in_array($clean_value, array('allow', 'deny'))) {
+			if (in_array($clean_key, $valid_categories, true) && in_array($clean_value, array('allow', 'deny'), true)) {
 				$safe_states[$clean_key] = $clean_value;
 			}
 		}
@@ -842,7 +877,8 @@ class Truendo_Admin
 		// Ensure all required categories are present
 		foreach ($valid_categories as $category) {
 			if (!isset($safe_states[$category])) {
-				$safe_states[$category] = 'deny'; // Safe default
+				// functional should always be 'allow', others default to 'deny'
+				$safe_states[$category] = ($category === 'functional') ? 'allow' : 'deny';
 			}
 		}
 
