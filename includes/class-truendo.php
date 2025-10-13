@@ -177,8 +177,10 @@ class Truendo {
 	 	$this->loader->add_action( 'wp_head', $plugin_public, 'add_truendo_script', 5);
 
 		// Google Consent Mode v2 script injection (priority 10 - loads after TRUENDO CMP)
-		// WordPress Consent API is now integrated within Google Consent Mode script
 		$this->loader->add_action( 'wp_head', $plugin_public, 'add_google_consent_mode_script', 10 );
+
+		// WordPress Consent API script injection (priority 10 - loads after TRUENDO CMP)
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_wp_consent_api_script', 10 );
 	}
 
 	/**
