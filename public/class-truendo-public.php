@@ -237,7 +237,6 @@ class Truendo_Public
 
 		// TRUENDO callback function for consent updates
 		$script .= 'function TruendoCookieControlCallback(cookieObj) {';
-		$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: *** CALLBACK TRIGGERED ***", cookieObj);';
 		$script .= 'if (cookieObj.preferences) {';
 		$script .= 'gtag("consent", "update", { preferences: "granted" });';
 		$script .= '} else {';
@@ -271,33 +270,24 @@ class Truendo_Public
 
 		// WordPress Consent API updates using TRUENDO mapping
 		if (get_option('truendo_wp_consent_enabled')) {
-			$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: Updating WP Consent from cookie", cookieObj);';
 			$script .= 'if (typeof wp_set_consent === "function") {';
-			$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: wp_set_consent found");';
 
 			// preferences
 			$script .= 'var prefValue = cookieObj.preferences ? "allow" : "deny";';
 			$script .= 'wp_set_consent("preferences", prefValue);';
-			$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: Set preferences =", prefValue);';
-			$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: VERIFY preferences - wp_has_consent(preferences) =", typeof wp_has_consent === "function" ? wp_has_consent("preferences") : "wp_has_consent not available");';
 
 			// marketing
 			$script .= 'var marketingValue = cookieObj.marketing ? "allow" : "deny";';
 			$script .= 'wp_set_consent("marketing", marketingValue);';
-			$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: Set marketing =", marketingValue);';
-			$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: VERIFY marketing - wp_has_consent(marketing) =", typeof wp_has_consent === "function" ? wp_has_consent("marketing") : "wp_has_consent not available");';
 
 			// statistics
 			$script .= 'var statsValue = cookieObj.statistics ? "allow" : "deny";';
 			$script .= 'wp_set_consent("statistics", statsValue);';
 			$script .= 'wp_set_consent("statistics-anonymous", statsValue);';
-			$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: Set statistics =", statsValue);';
-			$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: VERIFY statistics - wp_has_consent(statistics) =", typeof wp_has_consent === "function" ? wp_has_consent("statistics") : "wp_has_consent not available");';
 
 			// functional
 			$script .= 'wp_set_consent("functional", "allow");';
 
-			$script .= 'console.log("TRUENDO Callback [Google Consent Mode]: WP Consent updated successfully");';
 			$script .= '} else {';
 			$script .= 'console.warn("TRUENDO Callback [Google Consent Mode]: wp_set_consent function NOT found");';
 			$script .= '}';
@@ -308,24 +298,19 @@ class Truendo_Public
 		// WordPress Consent API - Initialize and set default states
 		if ($wp_consent_enabled) {
 			// Initialize WP Consent API
-			$script .= 'console.log("TRUENDO WP Consent API: Initializing...");';
 			$script .= 'window.wp_consent_type = "optin";';
 			$script .= 'let wpConsentEvent = new CustomEvent("wp_consent_type_defined");';
 			$script .= 'document.dispatchEvent(wpConsentEvent);';
-			$script .= 'console.log("TRUENDO WP Consent API: Initialized with type = optin");';
 
 			// Set default states when DOM is ready
 			// Callback will update these when TRUENDO CMP triggers it
 			$script .= 'document.addEventListener("DOMContentLoaded", function() {';
-			$script .= 'console.log("TRUENDO WP Consent API: DOM ready, attempting to set defaults...");';
 			$script .= 'if (typeof wp_set_consent === "function") {';
-			$script .= 'console.log("TRUENDO WP Consent API: wp_set_consent found, setting defaults from admin settings...");';
 			$script .= 'wp_set_consent("preferences", "' . esc_js($wp_safe_states['preferences'] ?? 'deny') . '");';
 			$script .= 'wp_set_consent("marketing", "' . esc_js($wp_safe_states['marketing'] ?? 'deny') . '");';
 			$script .= 'wp_set_consent("statistics", "' . esc_js($wp_safe_states['statistics'] ?? 'deny') . '");';
 			$script .= 'wp_set_consent("statistics-anonymous", "' . esc_js($wp_safe_states['statistics-anonymous'] ?? 'deny') . '");';
 			$script .= 'wp_set_consent("functional", "allow");';
-			$script .= 'console.log("TRUENDO WP Consent API: Defaults set successfully (will be updated by callback if consent cookie exists)");';
 			$script .= '} else {';
 			$script .= 'console.warn("TRUENDO WP Consent API: wp_set_consent function not found. WP Consent API plugin may not be installed.");';
 			$script .= '}';
@@ -545,21 +530,15 @@ class Truendo_Public
 
 		// TRUENDO callback function for WP Consent API updates from cookie
 		$script .= 'function TruendoCookieControlCallback(cookieObj) {';
-		$script .= 'console.log("TRUENDO Callback [Standalone WP Consent]: *** CALLBACK TRIGGERED ***", cookieObj);';
 		$script .= 'if (typeof wp_set_consent === "function") {';
-		$script .= 'console.log("TRUENDO Callback [Standalone WP Consent]: wp_set_consent found");';
 		$script .= 'var prefValue = cookieObj.preferences ? "allow" : "deny";';
-		$script .= 'console.log("TRUENDO Callback [Standalone WP Consent]: Setting preferences =", prefValue, "from cookieObj.preferences =", cookieObj.preferences);';
 		$script .= 'wp_set_consent("preferences", prefValue);';
 		$script .= 'var marketingValue = cookieObj.marketing ? "allow" : "deny";';
-		$script .= 'console.log("TRUENDO Callback [Standalone WP Consent]: Setting marketing =", marketingValue, "from cookieObj.marketing =", cookieObj.marketing);';
 		$script .= 'wp_set_consent("marketing", marketingValue);';
 		$script .= 'var statsValue = cookieObj.statistics ? "allow" : "deny";';
-		$script .= 'console.log("TRUENDO Callback [Standalone WP Consent]: Setting statistics =", statsValue, "from cookieObj.statistics =", cookieObj.statistics);';
 		$script .= 'wp_set_consent("statistics", statsValue);';
 		$script .= 'wp_set_consent("statistics-anonymous", statsValue);';
 		$script .= 'wp_set_consent("functional", "allow");';
-		$script .= 'console.log("TRUENDO Callback [Standalone WP Consent]: ✓ WP Consent updated successfully from cookie");';
 		$script .= '} else {';
 		$script .= 'console.error("TRUENDO Callback [Standalone WP Consent]: ✗ wp_set_consent function NOT found - WP Consent API plugin may not be installed");';
 		$script .= '}';

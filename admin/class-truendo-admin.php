@@ -509,15 +509,12 @@ class Truendo_Admin
 
 		<?php if ($wp_consent_enabled): ?>
 		// WordPress Consent API - Set default states immediately
-		console.log('TRUENDO WP Consent API: Setting defaults...');
 		if (typeof wp_set_consent === 'function') {
-			console.log('TRUENDO: wp_set_consent function found from WordPress');
 			wp_set_consent('preferences', '<?php echo esc_js($wp_safe_states['preferences'] ?? 'deny'); ?>');
 			wp_set_consent('marketing', '<?php echo esc_js($wp_safe_states['marketing'] ?? 'deny'); ?>');
 			wp_set_consent('statistics', '<?php echo esc_js($wp_safe_states['statistics'] ?? 'deny'); ?>');
 			wp_set_consent('statistics-anonymous', '<?php echo esc_js($wp_safe_states['statistics-anonymous'] ?? 'deny'); ?>');
 			wp_set_consent('functional', 'allow');
-			console.log('TRUENDO WP Consent API: Defaults set successfully');
 		} else {
 			console.warn('TRUENDO: wp_set_consent function not found. Please install a WordPress Consent API plugin.');
 		}
