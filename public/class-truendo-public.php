@@ -86,9 +86,65 @@ class Truendo_Public
 		return $isOkay;
 	}
 
+	/**
+	 * Check if the site has a geo-distributed CMP script available on S3
+	 * Uses WordPress transients to cache the result for 24 hours
+	 *
+	 * @since    1.0.0
+	 * @param    string    $site_id    The TRUENDO site ID
+	 * @return   bool                  True if geo script exists (200 response), false otherwise
+	 */
+	private function truendo_check_geo_script_exists($site_id)
+	{
+		// Return false if no site_id
+		if (empty($site_id)) {
+			return false;
+		}
+
+		// Check for cached result
+		$transient_key = 'truendo_geo_script_' . sanitize_key($site_id);
+		$cached_result = get_transient($transient_key);
+
+		// Return cached result if available
+		if ($cached_result !== false) {
+			return ($cached_result === 'yes');
+		}
+
+		// Build S3 URL
+		$s3_url = 'https://pc-origin-bucket.s3.eu-central-1.amazonaws.com/v2/' . urlencode($site_id) . '/default/truendo_cmp.pid.js';
+
+		// Make HTTP HEAD request (more efficient than GET)
+		$response = wp_remote_head($s3_url, array(
+			'timeout' => 5,
+			'redirection' => 0,
+			'sslverify' => true
+		));
+
+		// Check if request was successful and returned 200
+		$exists = false;
+		if (!is_wp_error($response)) {
+			$status_code = wp_remote_retrieve_response_code($response);
+			$exists = ($status_code === 200);
+		}
+
+		// Cache the result for 24 hours
+		set_transient($transient_key, ($exists ? 'yes' : 'no'), 24 * HOUR_IN_SECONDS);
+
+		return $exists;
+	}
+
 	public function add_truendo_script(){
 		if ($this->truendo_check_page_builder() && get_option('truendo_enabled')) {
-			echo '<script id="truendoAutoBlock" type="text/javascript" src="https://cdn.priv.center/pc/truendo_cmp.pid.js" data-siteid="' . get_option("truendo_site_id") . '"></script>';
+			$site_id = get_option("truendo_site_id");
+
+			// Check if geo script exists on S3
+			if ($this->truendo_check_geo_script_exists($site_id)) {
+				// Use new CDN-geo script
+				echo '<!-- TRUENDO Privacy Center --><script id="truendoAutoBlock" type="text/javascript" src="https://cdn-geo.priv.center/' . esc_attr($site_id) . '/?id=' . esc_attr($site_id) . '"></script><!-- End TRUENDO Privacy Center -->';
+			} else {
+				// Fallback to original script
+				echo '<script id="truendoAutoBlock" type="text/javascript" src="https://cdn.priv.center/pc/truendo_cmp.pid.js" data-siteid="' . esc_attr($site_id) . '"></script>';
+			}
 		}
 	}
 
