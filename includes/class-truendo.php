@@ -78,9 +78,6 @@ class Truendo {
 		$this->truendo_set_locale();
 		$this->truendo_define_admin_hooks();
 		$this->truendo_define_public_hooks();
-		
-		// Initialize consent API compatibility
-		$this->truendo_init_consent_api();
 	}
 
 	/**
@@ -123,12 +120,6 @@ class Truendo {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-truendo-public.php';
-		
-		/**
-		 * The class responsible for providing WordPress Consent API compatibility
-		 * when the official plugin is not installed.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-truendo-consent-api.php';
 
 		$this->loader = new Truendo_Loader();
 	}
@@ -145,23 +136,6 @@ class Truendo {
 	private function truendo_set_locale() {
 		$plugin_i18n = new Truendo_i18n();
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-	}
-	
-	/**
-	 * Initialize consent API compatibility
-	 * 
-	 * Checks if WordPress Consent API plugin is active.
-	 * If not, initializes our fallback implementation.
-	 *
-	 * @since    2.5.0
-	 * @access   private
-	 */
-	private function truendo_init_consent_api() {
-		// Check if the WordPress Consent API plugin is active
-		if ( ! class_exists( 'WP_CONSENT_API' ) ) {
-			// Plugin is not active, initialize our fallback
-			// The init hook is already added in the class-truendo-consent-api.php file
-		}
 	}
 
 	/**
