@@ -426,8 +426,9 @@ class Truendo_Admin
 		// Set the developer id
 		gtag("set", "developer_id.dMjBiZm", true);
 
-		function TruendoCookieControlCallback(cookieObj) {
-			if (cookieObj.preferences) {
+		window.addEventListener('TruendoCookieControl', function(event) {
+			var cookieSettings = event.detail;
+			if (cookieSettings.preferences) {
 				gtag("consent", "update", {
 					preferences: "granted",
 				});
@@ -436,7 +437,7 @@ class Truendo_Admin
 					preferences: "denied",
 				});
 			}
-			if (cookieObj.marketing) {
+			if (cookieSettings.marketing) {
 				gtag("consent", "update", {
 					ad_storage: "granted",
 					ad_personalization: "granted",
@@ -449,7 +450,7 @@ class Truendo_Admin
 					ad_user_data: "denied",
 				});
 			}
-			if (cookieObj.add_features) {
+			if (cookieSettings.add_features) {
 				gtag("consent", "update", {
 					functionality_storage: "granted",
 					personalization_storage: "granted",
@@ -460,7 +461,7 @@ class Truendo_Admin
 					personalization_storage: "denied",
 				});
 			}
-			if (cookieObj.statistics) {
+			if (cookieSettings.statistics) {
 				gtag("consent", "update", {
 					analytics_storage: "granted",
 				});
@@ -469,7 +470,7 @@ class Truendo_Admin
 					analytics_storage: "denied",
 				});
 			}
-			if (cookieObj.social_content) {
+			if (cookieSettings.social_content) {
 				gtag("consent", "update", {
 					social_content: "granted",
 				});
@@ -478,7 +479,7 @@ class Truendo_Admin
 					social_content: "denied",
 				});
 			}
-			if (cookieObj.social_sharing) {
+			if (cookieSettings.social_sharing) {
 				gtag("consent", "update", {
 					social_sharing: "granted",
 				});
@@ -492,20 +493,20 @@ class Truendo_Admin
 			<?php if (get_option('truendo_wp_consent_enabled')): ?>
 			if (typeof wp_set_consent === 'function') {
 				// preferences -> preferences
-				wp_set_consent('preferences', cookieObj.preferences ? 'allow' : 'deny');
+				wp_set_consent('preferences', cookieSettings.preferences ? 'allow' : 'deny');
 
 				// marketing -> marketing
-				wp_set_consent('marketing', cookieObj.marketing ? 'allow' : 'deny');
+				wp_set_consent('marketing', cookieSettings.marketing ? 'allow' : 'deny');
 
 				// statistics -> statistics, statistics-anonymous
-				wp_set_consent('statistics', cookieObj.statistics ? 'allow' : 'deny');
-				wp_set_consent('statistics-anonymous', cookieObj.statistics ? 'allow' : 'deny');
+				wp_set_consent('statistics', cookieSettings.statistics ? 'allow' : 'deny');
+				wp_set_consent('statistics-anonymous', cookieSettings.statistics ? 'allow' : 'deny');
 
 				// necessary -> functional (always allowed)
 				wp_set_consent('functional', 'allow');
 			}
 			<?php endif; ?>
-		}
+		});
 
 		<?php if ($wp_consent_enabled): ?>
 		// WordPress Consent API - Set default states immediately

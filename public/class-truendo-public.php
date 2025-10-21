@@ -291,34 +291,35 @@ class Truendo_Public
 		// Set the developer id
 		$script .= 'gtag("set", "developer_id.dMjBiZm", true);';
 
-		// TRUENDO callback function for consent updates
-		$script .= 'function TruendoCookieControlCallback(cookieObj) {';
-		$script .= 'if (cookieObj.preferences) {';
+		// TRUENDO event listener for consent updates
+		$script .= 'window.addEventListener("TruendoCookieControl", function(event) {';
+		$script .= 'var cookieSettings = event.detail;';
+		$script .= 'if (cookieSettings.preferences) {';
 		$script .= 'gtag("consent", "update", { preferences: "granted" });';
 		$script .= '} else {';
 		$script .= 'gtag("consent", "update", { preferences: "denied" });';
 		$script .= '}';
-		$script .= 'if (cookieObj.marketing) {';
+		$script .= 'if (cookieSettings.marketing) {';
 		$script .= 'gtag("consent", "update", { ad_storage: "granted", ad_personalization: "granted", ad_user_data: "granted" });';
 		$script .= '} else {';
 		$script .= 'gtag("consent", "update", { ad_storage: "denied", ad_personalization: "denied", ad_user_data: "denied" });';
 		$script .= '}';
-		$script .= 'if (cookieObj.add_features) {';
+		$script .= 'if (cookieSettings.add_features) {';
 		$script .= 'gtag("consent", "update", { functionality_storage: "granted", personalization_storage: "granted" });';
 		$script .= '} else {';
 		$script .= 'gtag("consent", "update", { functionality_storage: "denied", personalization_storage: "denied" });';
 		$script .= '}';
-		$script .= 'if (cookieObj.statistics) {';
+		$script .= 'if (cookieSettings.statistics) {';
 		$script .= 'gtag("consent", "update", { analytics_storage: "granted" });';
 		$script .= '} else {';
 		$script .= 'gtag("consent", "update", { analytics_storage: "denied" });';
 		$script .= '}';
-		$script .= 'if (cookieObj.social_content) {';
+		$script .= 'if (cookieSettings.social_content) {';
 		$script .= 'gtag("consent", "update", { social_content: "granted" });';
 		$script .= '} else {';
 		$script .= 'gtag("consent", "update", { social_content: "denied" });';
 		$script .= '}';
-		$script .= 'if (cookieObj.social_sharing) {';
+		$script .= 'if (cookieSettings.social_sharing) {';
 		$script .= 'gtag("consent", "update", { social_sharing: "granted" });';
 		$script .= '} else {';
 		$script .= 'gtag("consent", "update", { social_sharing: "denied" });';
@@ -329,15 +330,15 @@ class Truendo_Public
 			$script .= 'if (typeof wp_set_consent === "function") {';
 
 			// preferences
-			$script .= 'var prefValue = cookieObj.preferences ? "allow" : "deny";';
+			$script .= 'var prefValue = cookieSettings.preferences ? "allow" : "deny";';
 			$script .= 'wp_set_consent("preferences", prefValue);';
 
 			// marketing
-			$script .= 'var marketingValue = cookieObj.marketing ? "allow" : "deny";';
+			$script .= 'var marketingValue = cookieSettings.marketing ? "allow" : "deny";';
 			$script .= 'wp_set_consent("marketing", marketingValue);';
 
 			// statistics
-			$script .= 'var statsValue = cookieObj.statistics ? "allow" : "deny";';
+			$script .= 'var statsValue = cookieSettings.statistics ? "allow" : "deny";';
 			$script .= 'wp_set_consent("statistics", statsValue);';
 			$script .= 'wp_set_consent("statistics-anonymous", statsValue);';
 
@@ -345,11 +346,11 @@ class Truendo_Public
 			$script .= 'wp_set_consent("functional", "allow");';
 
 			$script .= '} else {';
-			$script .= 'console.warn("TRUENDO Callback [Google Consent Mode]: wp_set_consent function NOT found");';
+			$script .= 'console.warn("TRUENDO Event Listener [Google Consent Mode]: wp_set_consent function NOT found");';
 			$script .= '}';
 		}
 
-		$script .= '}';
+		$script .= '});';
 
 		// WordPress Consent API - Initialize and set default states
 		if ($wp_consent_enabled) {
@@ -584,21 +585,22 @@ class Truendo_Public
 		$script .= 'wp_set_consent("functional", "allow");'; // necessary cookies always allowed
 		$script .= '}';
 
-		// TRUENDO callback function for WP Consent API updates from cookie
-		$script .= 'function TruendoCookieControlCallback(cookieObj) {';
+		// TRUENDO event listener for WP Consent API updates from cookie
+		$script .= 'window.addEventListener("TruendoCookieControl", function(event) {';
+		$script .= 'var cookieSettings = event.detail;';
 		$script .= 'if (typeof wp_set_consent === "function") {';
-		$script .= 'var prefValue = cookieObj.preferences ? "allow" : "deny";';
+		$script .= 'var prefValue = cookieSettings.preferences ? "allow" : "deny";';
 		$script .= 'wp_set_consent("preferences", prefValue);';
-		$script .= 'var marketingValue = cookieObj.marketing ? "allow" : "deny";';
+		$script .= 'var marketingValue = cookieSettings.marketing ? "allow" : "deny";';
 		$script .= 'wp_set_consent("marketing", marketingValue);';
-		$script .= 'var statsValue = cookieObj.statistics ? "allow" : "deny";';
+		$script .= 'var statsValue = cookieSettings.statistics ? "allow" : "deny";';
 		$script .= 'wp_set_consent("statistics", statsValue);';
 		$script .= 'wp_set_consent("statistics-anonymous", statsValue);';
 		$script .= 'wp_set_consent("functional", "allow");';
 		$script .= '} else {';
-		$script .= 'console.error("TRUENDO Callback [Standalone WP Consent]: ✗ wp_set_consent function NOT found - WP Consent API plugin may not be installed");';
+		$script .= 'console.error("TRUENDO Event Listener [Standalone WP Consent]: ✗ wp_set_consent function NOT found - WP Consent API plugin may not be installed");';
 		$script .= '}';
-		$script .= '}';
+		$script .= '});';
 
 		$script .= '</script>';
 
