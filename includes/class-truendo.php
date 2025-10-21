@@ -147,6 +147,10 @@ class Truendo {
 	 */
 	private function truendo_define_admin_hooks() {
 		$plugin_admin = new Truendo_Admin( $this->truendo_get_plugin_name(), $this->truendo_get_version() );
+
+		// Plugin dependency check - show admin notice if WP Consent API is missing
+		$this->loader->add_action( 'admin_notices', $plugin_admin, 'truendo_dependency_admin_notice' );
+
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'truendo_admin_display_admin_page' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'my_plugin_menu' );
 		// Add Settings link to the plugin

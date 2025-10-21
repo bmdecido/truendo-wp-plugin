@@ -4,7 +4,7 @@
  * @wordpress-plugin
  * Plugin Name:       TRUENDO | Your all-in-one website privacy solution
  * Plugin URI:         https://truendo.com/docs/how-to-add-privacy-policy/wordpress/
- * Description:       For quick and easy GDPR & Cookie compliance add TRUENDO to your website. Features Google Consent Mode v2 support and WordPress Consent API integration.
+ * Description:       For quick and easy GDPR & Cookie compliance add TRUENDO to your website. Features Google Consent Mode v2 support and WordPress Consent API integration. Requires WP Consent API plugin.
  * Version:           2.4.0
  * Author:            TRUENDO
  * Author URI:        https://www.truendo.com
@@ -12,6 +12,7 @@
  * License URI:       https://www.apache.org/licenses/LICENSE-2.0
  * Text Domain:       truendo
  * Domain Path:       /languages
+ * Requires Plugins:  wp-consent-api
  */
 
 // If this file is called directly, abort.
