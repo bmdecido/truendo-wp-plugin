@@ -231,6 +231,206 @@ $tabs = array(
                         </div>
                     </div>
 
+                    <!-- TruSettings Configuration Section -->
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Advanced TruSettings Configuration', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Configure advanced TRUENDO settings. Leave fields empty to use defaults.', 'truendo'); ?>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Boolean Settings -->
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('No Font', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Disable custom fonts in the privacy panel.', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='checkbox' name='truendo_trusettings_nofont'
+                                <?php echo get_option('truendo_trusettings_nofont') ? 'checked="checked"' : ''; ?> />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Transparency', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Enable transparent background for the privacy panel.', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='checkbox' name='truendo_trusettings_transparency'
+                                <?php echo get_option('truendo_trusettings_transparency') ? 'checked="checked"' : ''; ?> />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Accessibility', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Enable accessibility features in the privacy panel.', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='checkbox' name='truendo_trusettings_accessibility'
+                                <?php echo get_option('truendo_trusettings_accessibility') ? 'checked="checked"' : ''; ?> />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Accessibility Border Color', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Set custom border color for accessibility mode (e.g., #000000).', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='text' name='truendo_trusettings_accessibility_border_color'
+                                value="<?php echo esc_attr(get_option('truendo_trusettings_accessibility_border_color')); ?>"
+                                placeholder="#000000" />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Autoblocking Disabled', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Disable automatic script blocking.', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='checkbox' name='truendo_trusettings_autoblocking_disabled'
+                                <?php echo get_option('truendo_trusettings_autoblocking_disabled') ? 'checked="checked"' : ''; ?> />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Is Consent Mode', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Enable consent mode operation.', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='checkbox' name='truendo_trusettings_is_consent_mode'
+                                <?php echo get_option('truendo_trusettings_is_consent_mode') ? 'checked="checked"' : ''; ?> />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Custom URL', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Enable custom privacy policy URL.', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='checkbox' name='truendo_trusettings_custom_url'
+                                <?php echo get_option('truendo_trusettings_custom_url') ? 'checked="checked"' : ''; ?> />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Headless Mode', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Enable headless mode (no UI).', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='checkbox' name='truendo_trusettings_tru_headless'
+                                <?php echo get_option('truendo_trusettings_tru_headless') ? 'checked="checked"' : ''; ?> />
+                        </div>
+                    </div>
+
+                    <!-- Text/String Settings -->
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Truendo Type', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Specify the TRUENDO panel type.', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='text' name='truendo_trusettings_trutype'
+                                value="<?php echo esc_attr(get_option('truendo_trusettings_trutype')); ?>" />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Language Override', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Override language setting (e.g., en, de, fr).', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='text' name='truendo_trusettings_lang'
+                                value="<?php echo esc_attr(get_option('truendo_trusettings_lang')); ?>"
+                                placeholder="auto" />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Popup Delay', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Delay before showing popup (in milliseconds).', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='number' name='truendo_trusettings_popup_delay'
+                                value='<?php echo esc_attr(get_option('truendo_trusettings_popup_delay', 0)); ?>'
+                                min='0' step='1' />
+                            <span class='truendo_unit_label'><?php echo __('ms', 'truendo'); ?></span>
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Pay ID', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Payment or subscription identifier.', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='text' name='truendo_trusettings_pay_id'
+                                value="<?php echo esc_attr(get_option('truendo_trusettings_pay_id')); ?>" />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Region Override', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Override region detection (e.g., EU, US). Default: "default".', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='text' name='truendo_trusettings_region_override'
+                                value="<?php echo esc_attr(get_option('truendo_trusettings_region_override', 'default')); ?>"
+                                placeholder="default" />
+                        </div>
+                    </div>
+
+                    <div class='truendo_setting_holder'>
+                        <div class='truendo_setting_info'>
+                            <p><?php echo __('Custom URL Value', 'truendo'); ?></p>
+                            <p class='truendo_setting_description'>
+                                <?php echo __('Custom privacy policy URL.', 'truendo'); ?>
+                            </p>
+                        </div>
+                        <div class='truendo_setting'>
+                            <input type='url' name='truendo_trusettings_custom_url_value'
+                                value="<?php echo esc_attr(get_option('truendo_trusettings_custom_url_value')); ?>"
+                                placeholder="https://" />
+                        </div>
+                    </div>
+
                     <div class='truendo_setting_holder'>
 
                         <div class='submit'>

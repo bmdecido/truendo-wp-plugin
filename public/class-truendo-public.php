@@ -133,9 +133,129 @@ class Truendo_Public
 		return $exists;
 	}
 
+	/**
+	 * Build TruSettings configuration array
+	 *
+	 * @since    1.0.0
+	 * @return   array    TruSettings configuration (only non-empty values)
+	 */
+	private function get_trusettings_config()
+	{
+		$trusettings = array();
+
+		// Boolean settings
+		if (get_option('truendo_trusettings_nofont')) {
+			$trusettings['nofont'] = true;
+		}
+
+		// Check accessibility first - if true, transparency must be false
+		$accessibility_enabled = get_option('truendo_trusettings_accessibility');
+		$transparency_enabled = get_option('truendo_trusettings_transparency', true);
+
+		if ($accessibility_enabled) {
+			$trusettings['accessibility'] = true;
+			// Hardcode transparency to false when accessibility is enabled
+			$trusettings['transparency'] = false;
+		} else {
+			// Always include transparency setting (defaults to true)
+			// Include it even if false so it's explicitly set in window object
+			if ($transparency_enabled) {
+				$trusettings['transparency'] = true;
+			} else {
+				$trusettings['transparency'] = false;
+			}
+		}
+
+		if (get_option('truendo_trusettings_autoblocking_disabled')) {
+			$trusettings['autoblocking-disabled'] = true;
+		}
+
+		if (get_option('truendo_trusettings_is_consent_mode')) {
+			$trusettings['is-consent-mode'] = true;
+		}
+
+		if (get_option('truendo_trusettings_custom_url')) {
+			$trusettings['custom_url'] = true;
+		}
+
+		if (get_option('truendo_trusettings_tru_headless')) {
+			$trusettings['tru-headless'] = true;
+		}
+
+		// String settings (only if not empty)
+		$accessibility_border_color = get_option('truendo_trusettings_accessibility_border_color');
+		if (!empty($accessibility_border_color)) {
+			$trusettings['accessibility-border-color'] = sanitize_text_field($accessibility_border_color);
+		}
+
+		$trutype = get_option('truendo_trusettings_trutype');
+		if (!empty($trutype)) {
+			$trusettings['trutype'] = sanitize_text_field($trutype);
+		}
+
+		$lang = get_option('truendo_trusettings_lang');
+		if (!empty($lang)) {
+			$trusettings['lang'] = sanitize_text_field($lang);
+		}
+
+		$pay_id = get_option('truendo_trusettings_pay_id');
+		if (!empty($pay_id)) {
+			$trusettings['pay-id'] = sanitize_text_field($pay_id);
+		}
+
+		$region_override = get_option('truendo_trusettings_region_override', 'default');
+		if (!empty($region_override)) {
+			$trusettings['region-override'] = sanitize_text_field($region_override);
+		}
+
+		$custom_url_value = get_option('truendo_trusettings_custom_url_value');
+		if (!empty($custom_url_value)) {
+			$trusettings['custom_url_value'] = esc_url($custom_url_value);
+		}
+
+		// Number settings (only if greater than 0)
+		$popup_delay = get_option('truendo_trusettings_popup_delay', 0);
+		if ($popup_delay > 0) {
+			$trusettings['popup-delay'] = absint($popup_delay);
+		}
+
+		// Always include siteid from main TRUENDO settings
+		$site_id = get_option('truendo_site_id');
+		if (!empty($site_id)) {
+			$trusettings['siteid'] = sanitize_text_field($site_id);
+		}
+
+		return $trusettings;
+	}
+
 	public function add_truendo_script(){
 		if ($this->truendo_check_page_builder() && get_option('truendo_enabled')) {
 			$site_id = get_option("truendo_site_id");
+
+			// Get TruSettings configuration
+			$trusettings = $this->get_trusettings_config();
+
+			// Output TruSettings configuration if any settings are configured
+			// Uses Object.assign to merge with existing properties without overwriting
+			if (!empty($trusettings)) {
+				echo '<script>window.TruSettings = Object.assign(window.TruSettings || {}, {';
+				$first = true;
+				foreach ($trusettings as $key => $value) {
+					if (!$first) {
+						echo ',';
+					}
+					$first = false;
+					echo '"' . esc_js($key) . '":';
+					if (is_bool($value)) {
+						echo $value ? 'true' : 'false';
+					} elseif (is_numeric($value)) {
+						echo $value;
+					} else {
+						echo '"' . esc_js($value) . '"';
+					}
+				}
+				echo '});</script>';
+			}
 
 			// Check if geo script exists on S3
 			if ($this->truendo_check_geo_script_exists($site_id)) {
