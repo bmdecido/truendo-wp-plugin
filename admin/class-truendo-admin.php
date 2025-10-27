@@ -149,12 +149,6 @@ class Truendo_Admin
 			'sanitize_callback' => 'sanitize_text_field'
 		));
 
-		register_setting('truendo_settings', 'truendo_trusettings_trutype', array(
-			'type' => 'string',
-			'default' => '',
-			'sanitize_callback' => 'sanitize_text_field'
-		));
-
 		register_setting('truendo_settings', 'truendo_trusettings_lang', array(
 			'type' => 'string',
 			'default' => '',
@@ -167,43 +161,7 @@ class Truendo_Admin
 			'sanitize_callback' => 'absint'
 		));
 
-		register_setting('truendo_settings', 'truendo_trusettings_pay_id', array(
-			'type' => 'string',
-			'default' => '',
-			'sanitize_callback' => 'sanitize_text_field'
-		));
-
 		register_setting('truendo_settings', 'truendo_trusettings_autoblocking_disabled', array(
-			'type' => 'boolean',
-			'default' => false,
-			'sanitize_callback' => 'rest_sanitize_boolean'
-		));
-
-		register_setting('truendo_settings', 'truendo_trusettings_is_consent_mode', array(
-			'type' => 'boolean',
-			'default' => false,
-			'sanitize_callback' => 'rest_sanitize_boolean'
-		));
-
-		register_setting('truendo_settings', 'truendo_trusettings_custom_url', array(
-			'type' => 'boolean',
-			'default' => false,
-			'sanitize_callback' => 'rest_sanitize_boolean'
-		));
-
-		register_setting('truendo_settings', 'truendo_trusettings_region_override', array(
-			'type' => 'string',
-			'default' => 'default',
-			'sanitize_callback' => 'sanitize_text_field'
-		));
-
-		register_setting('truendo_settings', 'truendo_trusettings_custom_url_value', array(
-			'type' => 'string',
-			'default' => '',
-			'sanitize_callback' => 'esc_url_raw'
-		));
-
-		register_setting('truendo_settings', 'truendo_trusettings_tru_headless', array(
 			'type' => 'boolean',
 			'default' => false,
 			'sanitize_callback' => 'rest_sanitize_boolean'

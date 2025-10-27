@@ -70,6 +70,20 @@ jQuery.decodeEntities = decode_entities;
     }
   });
 
+  //toggle TruSettings advanced configuration section
+  $('.truendo_trusettings_toggle').on('click', function () {
+    var $fields = $('.truendo_trusettings_fields');
+    var $arrow = $(this).find('strong');
+
+    if ($fields.is(':visible')) {
+      $fields.slideUp();
+      $arrow.html($arrow.text().replace('▲', '▼'));
+    } else {
+      $fields.slideDown();
+      $arrow.html($arrow.text().replace('▼', '▲'));
+    }
+  });
+
   // Select on click
   $('.truendo_settings_holder textarea').on('click', function () {
     $(this).select();

@@ -170,47 +170,15 @@ class Truendo_Public
 			$trusettings['autoblocking-disabled'] = true;
 		}
 
-		if (get_option('truendo_trusettings_is_consent_mode')) {
-			$trusettings['is-consent-mode'] = true;
-		}
-
-		if (get_option('truendo_trusettings_custom_url')) {
-			$trusettings['custom_url'] = true;
-		}
-
-		if (get_option('truendo_trusettings_tru_headless')) {
-			$trusettings['tru-headless'] = true;
-		}
-
 		// String settings (only if not empty)
 		$accessibility_border_color = get_option('truendo_trusettings_accessibility_border_color');
 		if (!empty($accessibility_border_color)) {
 			$trusettings['accessibility-border-color'] = sanitize_text_field($accessibility_border_color);
 		}
 
-		$trutype = get_option('truendo_trusettings_trutype');
-		if (!empty($trutype)) {
-			$trusettings['trutype'] = sanitize_text_field($trutype);
-		}
-
 		$lang = get_option('truendo_trusettings_lang');
 		if (!empty($lang)) {
 			$trusettings['lang'] = sanitize_text_field($lang);
-		}
-
-		$pay_id = get_option('truendo_trusettings_pay_id');
-		if (!empty($pay_id)) {
-			$trusettings['pay-id'] = sanitize_text_field($pay_id);
-		}
-
-		$region_override = get_option('truendo_trusettings_region_override', 'default');
-		if (!empty($region_override)) {
-			$trusettings['region-override'] = sanitize_text_field($region_override);
-		}
-
-		$custom_url_value = get_option('truendo_trusettings_custom_url_value');
-		if (!empty($custom_url_value)) {
-			$trusettings['custom_url_value'] = esc_url($custom_url_value);
 		}
 
 		// Number settings (only if greater than 0)
