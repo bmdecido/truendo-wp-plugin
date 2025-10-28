@@ -159,9 +159,10 @@ class Truendo {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'truendo_admin_enqueue_scripts' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'truendo_admin_add_settings' );
 
-		// Google Consent Mode v2 script injection (priority 10 - loads after TRUENDO CMP)
+		// Google Consent Mode v2 script injection (priority 1 - loads FIRST, before any Google tags)
+		// CRITICAL: Must load before SiteKit and other Google tag plugins to set consent defaults
 		// WordPress Consent API is now integrated within Google Consent Mode script
-		$this->loader->add_action( 'wp_head', $plugin_admin, 'add_google_consent_mode_script', 10 );
+		$this->loader->add_action( 'wp_head', $plugin_admin, 'add_google_consent_mode_script', 1 );
 
 	}
 
@@ -177,14 +178,15 @@ class Truendo {
 		$plugin_public = new Truendo_Public( $this->truendo_get_plugin_name(), $this->truendo_get_version());
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'truendo_public_enqueue_scripts' );
 
-		// TRUENDO CMP script injection (priority 5 - loads first)
-	 	$this->loader->add_action( 'wp_head', $plugin_public, 'add_truendo_script', 5);
+		// TRUENDO CMP script injection (priority 1 - loads FIRST for immediate consent panel display)
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_truendo_script', 1);
 
-		// Google Consent Mode v2 script injection (priority 10 - loads after TRUENDO CMP)
-		$this->loader->add_action( 'wp_head', $plugin_public, 'add_google_consent_mode_script', 10 );
+		// Google Consent Mode v2 script injection (priority 1 - loads second, before any Google tags)
+		// CRITICAL: Must load before SiteKit and other Google tag plugins to set consent defaults
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_google_consent_mode_script', 1 );
 
-		// WordPress Consent API script injection (priority 10 - loads after TRUENDO CMP)
-		$this->loader->add_action( 'wp_head', $plugin_public, 'add_wp_consent_api_script', 10 );
+		// WordPress Consent API script injection (priority 1 - loads third, standalone mode only)
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_wp_consent_api_script', 1 );
 	}
 
 	/**
