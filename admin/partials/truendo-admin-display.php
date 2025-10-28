@@ -18,6 +18,7 @@
 $tabs = array(
     __('TRUENDO Configuration', 'truendo'),
     __('Consent Mode', 'truendo'),
+    __('Help', 'truendo'),
 );
 ?>
 <div class="wrap truendo_settings">
@@ -350,6 +351,113 @@ $tabs = array(
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Help tab -->
+            <section>
+                <div class='truendo_help_section'>
+                    <!-- General Section -->
+                    <div class='truendo_help_category'>
+                        <h2><?php echo __('General', 'truendo'); ?></h2>
+                        <div class='truendo_help_links'>
+                            <a href='https://docs.truendo.com/en/1.0/integrations/wordpress' target='_blank' class='truendo_help_link'>
+                                <span class='dashicons dashicons-book'></span>
+                                <div class='truendo_help_link_content'>
+                                    <strong><?php echo __('Getting Started with WordPress Installation', 'truendo'); ?></strong>
+                                    <p><?php echo __('Learn how to install and set up TRUENDO on your WordPress site.', 'truendo'); ?></p>
+                                </div>
+                                <span class='dashicons dashicons-external'></span>
+                            </a>
+
+                            <a href='https://docs.truendo.com/en/1.0/regionalization/language-setup' target='_blank' class='truendo_help_link'>
+                                <span class='dashicons dashicons-translation'></span>
+                                <div class='truendo_help_link_content'>
+                                    <strong><?php echo __('Configuring Additional Languages', 'truendo'); ?></strong>
+                                    <p><?php echo __('Set up multiple languages for your consent banner.', 'truendo'); ?></p>
+                                </div>
+                                <span class='dashicons dashicons-external'></span>
+                            </a>
+
+                            <a href='https://docs.truendo.com/en/1.0/customization/banner-customization' target='_blank' class='truendo_help_link'>
+                                <span class='dashicons dashicons-admin-customizer'></span>
+                                <div class='truendo_help_link_content'>
+                                    <strong><?php echo __('Banner Customisation', 'truendo'); ?></strong>
+                                    <p><?php echo __('Customize the appearance and behavior of your consent banner.', 'truendo'); ?></p>
+                                </div>
+                                <span class='dashicons dashicons-external'></span>
+                            </a>
+
+                            <a href='https://docs.truendo.com/en/1.0/service-management/manual-rescan' target='_blank' class='truendo_help_link'>
+                                <span class='dashicons dashicons-update'></span>
+                                <div class='truendo_help_link_content'>
+                                    <strong><?php echo __('Initiate a Manual Domain Re-Scan', 'truendo'); ?></strong>
+                                    <p><?php echo __('Manually trigger a domain scan to detect new cookies and scripts.', 'truendo'); ?></p>
+                                </div>
+                                <span class='dashicons dashicons-external'></span>
+                            </a>
+
+                            <a href='https://docs.truendo.com/en/1.0/truendo-integrity' target='_blank' class='truendo_help_link'>
+                                <span class='dashicons dashicons-warning'></span>
+                                <div class='truendo_help_link_content'>
+                                    <strong><?php echo __('Understanding Console Warnings', 'truendo'); ?></strong>
+                                    <p><?php echo __('Learn about common console warnings and how to resolve them.', 'truendo'); ?></p>
+                                </div>
+                                <span class='dashicons dashicons-external'></span>
+                            </a>
+
+                            <a href='https://docs.truendo.com/en/1.0/getting-started/get-to-know-truendo' target='_blank' class='truendo_help_link'>
+                                <span class='dashicons dashicons-info'></span>
+                                <div class='truendo_help_link_content'>
+                                    <strong><?php echo __('More Information About TRUENDO CMP', 'truendo'); ?></strong>
+                                    <p><?php echo __('Discover all the features and capabilities of TRUENDO.', 'truendo'); ?></p>
+                                </div>
+                                <span class='dashicons dashicons-external'></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Section -->
+                    <div class='truendo_help_category'>
+                        <h2><?php echo __('Advanced', 'truendo'); ?></h2>
+                        <div class='truendo_help_links'>
+                            <a href='https://docs.truendo.com/en/1.0/frameworks/google-consent-mode-v2/troubleshooting-advanced' target='_blank' class='truendo_help_link'>
+                                <span class='dashicons dashicons-admin-tools'></span>
+                                <div class='truendo_help_link_content'>
+                                    <strong><?php echo __('Troubleshooting Google Consent Mode', 'truendo'); ?></strong>
+                                    <p><?php echo __('Resolve issues with Google Consent Mode v2 integration.', 'truendo'); ?></p>
+                                </div>
+                                <span class='dashicons dashicons-external'></span>
+                            </a>
+
+                            <a href='https://docs.truendo.com/en/1.0/regionalization/geo-control' target='_blank' class='truendo_help_link'>
+                                <span class='dashicons dashicons-location'></span>
+                                <div class='truendo_help_link_content'>
+                                    <strong><?php echo __('Using TRUENDO Smart-Geo', 'truendo'); ?></strong>
+                                    <p><?php echo __('Configure region-specific consent behavior with Smart-Geo.', 'truendo'); ?></p>
+                                </div>
+                                <span class='dashicons dashicons-external'></span>
+                            </a>
+
+                            <a href='https://docs.truendo.com/en/1.0/regionalization/custom-texttranslations' target='_blank' class='truendo_help_link'>
+                                <span class='dashicons dashicons-editor-quote'></span>
+                                <div class='truendo_help_link_content'>
+                                    <strong><?php echo __('Applying Custom Banner Translations', 'truendo'); ?></strong>
+                                    <p><?php echo __('Create and apply custom translations for your consent banner.', 'truendo'); ?></p>
+                                </div>
+                                <span class='dashicons dashicons-external'></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Documentation Button -->
+                    <div class='truendo_help_docs_button'>
+                        <a href='https://docs.truendo.com/' target='_blank' class='truendo_docs_main_button'>
+                            <span class='dashicons dashicons-media-document'></span>
+                            <?php echo __('Visit TRUENDO Documentation', 'truendo'); ?>
+                            <span class='dashicons dashicons-arrow-right-alt2'></span>
+                        </a>
                     </div>
                 </div>
             </section>

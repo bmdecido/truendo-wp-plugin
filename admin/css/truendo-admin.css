@@ -514,6 +514,129 @@ textarea:focus {
   text-decoration: underline;
 }
 
+/* Help Tab Styles */
+.truendo_help_section {
+  padding: 20px 0;
+}
+
+.truendo_help_category {
+  margin-bottom: 48px;
+}
+
+.truendo_help_category h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 24px 0;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #4bb3c3;
+}
+
+.truendo_help_links {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.truendo_help_link {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  color: inherit;
+}
+
+.truendo_help_link:hover {
+  border-color: #4bb3c3;
+  box-shadow: 0 4px 16px rgba(75, 179, 195, 0.15);
+  transform: translateY(-2px);
+}
+
+.truendo_help_link .dashicons {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: #4bb3c3;
+  flex-shrink: 0;
+}
+
+.truendo_help_link .dashicons-external {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #6c757d;
+  margin-left: auto;
+}
+
+.truendo_help_link_content {
+  flex: 1;
+}
+
+.truendo_help_link_content strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+.truendo_help_link_content p {
+  margin: 0;
+  font-size: 14px;
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+.truendo_help_link:hover .truendo_help_link_content strong {
+  color: #4bb3c3;
+}
+
+.truendo_help_link:hover .dashicons-external {
+  color: #4bb3c3;
+}
+
+/* Documentation Main Button */
+.truendo_help_docs_button {
+  text-align: center;
+  margin-top: 48px;
+  padding-top: 48px;
+  border-top: 2px solid #e9ecef;
+}
+
+.truendo_docs_main_button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 48px;
+  background: linear-gradient(135deg, #4bb3c3 0%, #3a9bb0 100%);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(75, 179, 195, 0.35);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.truendo_docs_main_button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(75, 179, 195, 0.45);
+  color: white;
+}
+
+.truendo_docs_main_button .dashicons {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .truendo_logo {
@@ -599,5 +722,29 @@ textarea:focus {
 
   .truendo_category_options {
     gap: 16px;
+  }
+
+  .truendo_help_link {
+    flex-wrap: wrap;
+    padding: 16px 20px;
+  }
+
+  .truendo_help_link .dashicons:first-child {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .truendo_help_link_content strong {
+    font-size: 15px;
+  }
+
+  .truendo_help_link_content p {
+    font-size: 13px;
+  }
+
+  .truendo_docs_main_button {
+    padding: 16px 32px;
+    font-size: 16px;
   }
 }
