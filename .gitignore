@@ -1,0 +1,17 @@
+# Claude Code files
+.claude/*
+
+# Specify files
+.specify
+
+# Documentation
+CLAUDE.md
+
+# Archives
+*.zip
+
+# Previous versions
+previous versions
+
+# Specifications
+specs/*
