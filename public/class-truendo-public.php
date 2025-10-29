@@ -360,18 +360,39 @@ class Truendo_Public
 		$script .= 'window.dataLayer = window.dataLayer || [];';
 		$script .= 'function gtag() { dataLayer.push(arguments); }';
 
-		// Set default consent states using user configuration
-		$script .= 'gtag("consent", "default", {';
-		$script .= 'ad_storage: "' . ($consent_mode_bools['ad_storage'] ? 'granted' : 'denied') . '",';
-		$script .= 'ad_user_data: "' . ($consent_mode_bools['ad_user_data'] ? 'granted' : 'denied') . '",';
-		$script .= 'ad_personalization: "' . ($consent_mode_bools['ad_personalization'] ? 'granted' : 'denied') . '",';
-		$script .= 'analytics_storage: "' . ($consent_mode_bools['analytics_storage'] ? 'granted' : 'denied') . '",';
-		$script .= 'preferences: "' . ($consent_mode_bools['preferences'] ? 'granted' : 'denied') . '",';
-		$script .= 'social_content: "' . ($consent_mode_bools['social_content'] ? 'granted' : 'denied') . '",';
-		$script .= 'social_sharing: "' . ($consent_mode_bools['social_sharing'] ? 'granted' : 'denied') . '",';
-		$script .= 'personalization_storage: "' . ($consent_mode_bools['personalization_storage'] ? 'granted' : 'denied') . '",';
+		// Helper function to read cookie
+		$script .= 'function getCookie(name) {';
+		$script .= 'var value = "; " + document.cookie;';
+		$script .= 'var parts = value.split("; " + name + "=");';
+		$script .= 'if (parts.length === 2) return parts.pop().split(";").shift();';
+		$script .= 'return null;';
+		$script .= '}';
+
+		// Read prior consent from TRUENDO cookie if it exists
+		$script .= 'var priorConsent = null;';
+		$script .= 'try {';
+		$script .= 'var cookieValue = getCookie("truendo_cmp");';
+		$script .= 'if (cookieValue) {';
+		$script .= 'priorConsent = JSON.parse(decodeURIComponent(cookieValue));';
+		$script .= '}';
+		$script .= '} catch(e) {}';
+
+		// Determine consent values (prior consent or configured defaults)
+		$script .= 'var consentDefaults = {';
+		$script .= 'ad_storage: priorConsent && priorConsent.marketing ? "granted" : "' . ($consent_mode_bools['ad_storage'] ? 'granted' : 'denied') . '",';
+		$script .= 'ad_user_data: priorConsent && priorConsent.marketing ? "granted" : "' . ($consent_mode_bools['ad_user_data'] ? 'granted' : 'denied') . '",';
+		$script .= 'ad_personalization: priorConsent && priorConsent.marketing ? "granted" : "' . ($consent_mode_bools['ad_personalization'] ? 'granted' : 'denied') . '",';
+		$script .= 'analytics_storage: priorConsent && priorConsent.statistics ? "granted" : "' . ($consent_mode_bools['analytics_storage'] ? 'granted' : 'denied') . '",';
+		$script .= 'preferences: priorConsent && priorConsent.preferences ? "granted" : "' . ($consent_mode_bools['preferences'] ? 'granted' : 'denied') . '",';
+		$script .= 'social_content: priorConsent && priorConsent.social_content ? "granted" : "' . ($consent_mode_bools['social_content'] ? 'granted' : 'denied') . '",';
+		$script .= 'social_sharing: priorConsent && priorConsent.social_sharing ? "granted" : "' . ($consent_mode_bools['social_sharing'] ? 'granted' : 'denied') . '",';
+		$script .= 'personalization_storage: priorConsent && priorConsent.add_features ? "granted" : "' . ($consent_mode_bools['personalization_storage'] ? 'granted' : 'denied') . '",';
 		$script .= 'functionality_storage: "granted",';
-		$script .= 'wait_for_update: ' . $safe_wait_time . '});';
+		$script .= 'wait_for_update: ' . $safe_wait_time;
+		$script .= '};';
+
+		// Set default consent states
+		$script .= 'gtag("consent", "default", consentDefaults);';
 
 		// Enable ads data redaction by default [optional]
 		$script .= 'gtag("set", "ads_data_redaction", true);';

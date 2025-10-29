@@ -159,11 +159,6 @@ class Truendo {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'truendo_admin_enqueue_scripts' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'truendo_admin_add_settings' );
 
-		// Google Consent Mode v2 script injection (priority 1 - loads FIRST, before any Google tags)
-		// CRITICAL: Must load before SiteKit and other Google tag plugins to set consent defaults
-		// WordPress Consent API is now integrated within Google Consent Mode script
-		$this->loader->add_action( 'wp_head', $plugin_admin, 'add_google_consent_mode_script', 1 );
-
 	}
 
 
