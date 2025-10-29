@@ -4,14 +4,15 @@
  * @wordpress-plugin
  * Plugin Name:       TRUENDO | Your all-in-one website privacy solution
  * Plugin URI:         https://truendo.com/docs/how-to-add-privacy-policy/wordpress/
- * Description:       For quick and easy GDPR & Cookie compliance add Truendo to your website 
- * Version:           2.3.2
+ * Description:       For quick and easy GDPR & Cookie compliance add TRUENDO to your website. Features Google Consent Mode v2 support and WordPress Consent API integration. Requires WP Consent API plugin.
+ * Version:           2.4.0
  * Author:            TRUENDO
  * Author URI:        https://www.truendo.com
  * License:           Apache-2.0
  * License URI:       https://www.apache.org/licenses/LICENSE-2.0
  * Text Domain:       truendo
  * Domain Path:       /languages
+ * Requires Plugins:  wp-consent-api
  */
 
 // If this file is called directly, abort.
@@ -24,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'TRUENDO_WORDPRESS_PLUGIN', '2.3.2' );
+define( 'TRUENDO_WORDPRESS_PLUGIN', '2.4.0' );
 
 
 /**

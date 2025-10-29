@@ -147,6 +147,10 @@ class Truendo {
 	 */
 	private function truendo_define_admin_hooks() {
 		$plugin_admin = new Truendo_Admin( $this->truendo_get_plugin_name(), $this->truendo_get_version() );
+
+		// Plugin dependency check - show admin notice if WP Consent API is missing
+		$this->loader->add_action( 'admin_notices', $plugin_admin, 'truendo_dependency_admin_notice' );
+
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'truendo_admin_display_admin_page' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'my_plugin_menu' );
 		// Add Settings link to the plugin
@@ -168,7 +172,16 @@ class Truendo {
 	private function truendo_define_public_hooks() {
 		$plugin_public = new Truendo_Public( $this->truendo_get_plugin_name(), $this->truendo_get_version());
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'truendo_public_enqueue_scripts' );
-	 	$this->loader->add_action( 'wp_head', $plugin_public, 'add_truendo_script', -1000);
+
+		// TRUENDO CMP script injection (priority 1 - loads FIRST for immediate consent panel display)
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_truendo_script', 1);
+
+		// Google Consent Mode v2 script injection (priority 1 - loads second, before any Google tags)
+		// CRITICAL: Must load before SiteKit and other Google tag plugins to set consent defaults
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_google_consent_mode_script', 1 );
+
+		// WordPress Consent API script injection (priority 1 - loads third, standalone mode only)
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_wp_consent_api_script', 1 );
 	}
 
 	/**
