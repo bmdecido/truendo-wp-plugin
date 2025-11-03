@@ -288,6 +288,10 @@ $tabs = array(
                             <p><?php echo __('WordPress Consent API', 'truendo'); ?></p>
                             <p class='truendo_setting_description'>
                                 <?php echo __('Integrates with WordPress Consent API for standardized consent management across plugins.', 'truendo'); ?>
+                                <br><br>
+                                <strong><?php echo __('Note:', 'truendo'); ?></strong> <?php echo __('This feature requires the', 'truendo'); ?>
+                                <a href='https://wordpress.org/plugins/wp-consent-api/' target='_blank' rel='noopener noreferrer'>wp-consent-api</a>
+                                <?php echo __('plugin to be installed and activated.', 'truendo'); ?>
                             </p>
                         </div>
                         <div class='truendo_setting'>

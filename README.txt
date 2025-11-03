@@ -114,6 +114,9 @@ Visit <https://truendo.com/>
 7. Paste your site-ID into the TRUENDO settings on your Wordpress dashboard, save changes, and you're set!
 
 == Changelog ==
+= 2.4.1 =
+Minor updates and improvements.
+
 = 2.4.0 =
 Added Google Consent Mode v2 support. Added WordPress Consent API support.
 
